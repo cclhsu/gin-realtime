@@ -1,0 +1,27 @@
+version: '3'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  redis:
+    image: redis:latest
+    pull_policy: always
+    container_name: redis
+    restart: unless-stopped
+    # environment:
+    #   -
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - my-network
+    labels:
+      app: redis
+      kompose.service.type: 'NodePort'
+
+volumes:
+  redis_data:
+    driver: local

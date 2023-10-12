@@ -1,0 +1,171 @@
+definitions:
+  model.Data:
+    properties:
+      message:
+        type: string
+    type: object
+  model.HelloJsonResponse:
+    properties:
+      data:
+        $ref: '#/definitions/model.Data'
+    type: object
+info:
+  contact: {}
+paths:
+  /health/healthy:
+    get:
+      consumes:
+      - application/json
+      description: Get Health Check
+      parameters:
+      - default: service
+        description: Service name
+        in: query
+        name: service
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Health Check
+      tags:
+      - health
+  /health/live:
+    get:
+      consumes:
+      - application/json
+      description: Get Health Check
+      parameters:
+      - default: service
+        description: Service name
+        in: query
+        name: service
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Health Check
+      tags:
+      - health
+  /health/ready:
+    get:
+      consumes:
+      - application/json
+      description: Get Health Check
+      parameters:
+      - default: service
+        description: Service name
+        in: query
+        name: service
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get Health Check
+      tags:
+      - health
+  /hello/json:
+    get:
+      consumes:
+      - application/json
+      description: get hello world json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.HelloJsonResponse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get hello world json
+      tags:
+      - hello
+  /hello/string:
+    get:
+      consumes:
+      - application/json
+      description: get hello world string
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get hello world string
+      tags:
+      - hello
+swagger: "2.0"

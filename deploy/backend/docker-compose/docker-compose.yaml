@@ -1,0 +1,36 @@
+version: '3'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  backend:
+    # build:
+    #   context: ./backend
+    #   dockerfile: ../docker/Dockerfile
+    image: gin-realtime:latest
+    # pull_policy: always
+    container_name: backend
+    # restart: unless-stopped
+    # environment:
+    #   -
+    ports:
+      - '3001:3001'
+      - '50051:50051'
+    volumes:
+      - backend_data:/app/data
+      - ../../../.env:/app/.env
+    networks:
+      - my-network
+    labels:
+      app: backend
+      kompose.service.type: 'NodePort'
+    # depends_on:
+    #   - redis
+    #   - mongodb
+    #   - postgres
+
+volumes:
+  backend_data:
+    # driver: local

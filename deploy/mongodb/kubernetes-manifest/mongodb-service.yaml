@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app: mongodb
+    kompose.service.type: NodePort
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodb
+  name: mongodb
+  namespace: default
+spec:
+  ports:
+    - name: "27017"
+      port: 27017
+      targetPort: 27017
+  selector:
+    io.kompose.service: mongodb
+  type: NodePort
+status:
+  loadBalancer: {}
