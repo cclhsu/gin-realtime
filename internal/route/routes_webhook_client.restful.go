@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -18,11 +19,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebhookClientRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebhookClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, webhookClientService *service.WebhookClientService) {
 
 	// Create instances of the controller
-	helloController := controller.NewHelloController(logger, helloService)
-	healthController := controller.NewHealthController(logger, healthService)
+	helloController := controller.NewHelloController(ctx, logger, helloService)
+	healthController := controller.NewHealthController(ctx, logger, healthService)
+	webhookClientController := controller.NewWebhookClientController(ctx, logger, webhookClientService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -82,36 +84,21 @@ func SetupRestfulWebhookClientRoutes(r *gin.Engine, host string, port string, lo
 	}
 
 	// handle webhook response from server
-	// webhookGroup := r.Group("/api/v1/webhook-client")
-	webhookGroup := r.Group("/webhook-client")
+	// webhookClientGroup := r.Group("/api/v1/webhook-client")
+	webhookClientGroup := r.Group("/webhook-client")
 	{
 		// webhookGroup.Use(middleware.WebhookMiddleware())
 
-		// webhookGroup.POST("/response", func(c *gin.Context) {
-		// 	// var json map[string]interface{}
-		// 	// if err := c.ShouldBindJSON(&json); err != nil {
-		// 	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 	// 	return
-		// 	// }
-		// 	// c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
-		//  // })
-
 		// Register a webhook
-		webhookGroup.POST("/register", nil)
+		webhookClientGroup.POST("/register", webhookClientController.RegisterWebhook)
 
 		// trigger event
-		webhookGroup.POST("/trigger-event", nil)
+		webhookClientGroup.POST("/trigger-event", webhookClientController.TriggerEvent)
 
 		// Handle webhook payload
-		webhookGroup.POST("/handle-payload", nil)
+		webhookClientGroup.POST("/handle-payload", webhookClientController.HandleTriggeredEvent)
 
 		// Disconnect a webhook
-		webhookGroup.POST("/disconnect/:id", nil)
-
-		// // List registered webhooks
-		// webhookGroup.GET("/list", nil)
-
-		// // Update a webhook
-		// webhookGroup.POST("/update/:id", nil)
+		webhookClientGroup.PUT("/disconnect/:webhookId", webhookClientController.DisconnectWebhook)
 	}
 }

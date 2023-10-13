@@ -37,11 +37,11 @@ package route
 // }
 
 // // SetupRoutes sets up the API routes
-// func SetupGraphQLRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, authService *service.AuthService, userService *service.UserService, teamService *service.TeamService, helloService *service.HelloService, healthService *service.HealthService) {
+// func SetupGraphQLRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, authService *service.AuthService, userService *service.UserService, teamService *service.TeamService, helloService *service.HelloService, healthService *service.HealthService) {
 
 //	// Create instances of the resolver
 //	resolver := graph.Resolver{
-//		// ctx:	   ctx,
+//		ctx:	   ctx,
 //		// logger:		 logger,
 //		AuthService:		authService,
 //		UserService:		userService,

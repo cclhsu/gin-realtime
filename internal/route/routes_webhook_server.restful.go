@@ -1,10 +1,10 @@
 package route
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
-	openapiDocs "github.com/cclhsu/gin-realtime/doc/openapi"
 	"github.com/cclhsu/gin-realtime/internal/controller"
 	"github.com/sirupsen/logrus"
 
@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebhookServerRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebhookServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, webhookServerService *service.WebhookServerService) {
 
 	// Create instances of the controller
-	helloController := controller.NewHelloController(logger, helloService)
-	healthController := controller.NewHealthController(logger, healthService)
+	helloController := controller.NewHelloController(ctx, logger, helloService)
+	healthController := controller.NewHealthController(ctx, logger, healthService)
+	webhookServerController := controller.NewWebhookServerController(ctx, logger, webhookServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -61,10 +62,12 @@ func SetupRestfulWebhookServerRoutes(r *gin.Engine, host string, port string, lo
 	// docGroup := r.Group("/api/v1/doc")
 	docGroup := r.Group("/doc")
 	{
-		openapiDocs.SwaggerInfo.BasePath = "/"
-
+		// openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfowebhook_server_service.BasePath = "/webhook-server-service"
+		// openapiDocs.cs.
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		// docGroup.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		docGroup.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
@@ -82,36 +85,24 @@ func SetupRestfulWebhookServerRoutes(r *gin.Engine, host string, port string, lo
 	}
 
 	// handle webhook request from client
-	// webhookGroup := r.Group("/api/v1/webhook")
-	webhookGroup := r.Group("/webhook")
+	// webhookServerGroup := r.Group("/api/v1/webhook")
+	webhookServerGroup := r.Group("/webhook")
 	{
 		// webhookGroup.Use(middleware.WebhookMiddleware())
 
-		// webhookGroup.POST("/response", func(c *gin.Context) {
-		// 	// var json map[string]interface{}
-		// 	// if err := c.ShouldBindJSON(&json); err != nil {
-		// 	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		// 	// 	return
-		// 	// }
-		// 	// c.JSON(http.StatusOK, gin.H{"status": "you are logged in"})
-		//  // })
-
 		// Register a webhook
-		webhookGroup.POST("/register", nil)
+		webhookServerGroup.POST("/register", webhookServerController.RegisterWebhook)
 
-		// // trigger event
-		// webhookGroup.POST("/trigger-event", nil)
+		// trigger event
+		webhookServerGroup.POST("/handle-event", webhookServerController.HandleWebhookEvent)
 
 		// Handle webhook event
-		webhookGroup.POST("/handle-event", nil)
-
-		// Unregister a webhook
-		webhookGroup.POST("/unregister/:id", nil)
+		webhookServerGroup.DELETE("/unregister/:webhookId", webhookServerController.UnregisterWebhook)
 
 		// List registered webhooks
-		webhookGroup.GET("/list", nil)
+		webhookServerGroup.GET("/list", webhookServerController.ListRegisteredWebhooks)
 
 		// Update a webhook
-		webhookGroup.POST("/update/:id", nil)
+		webhookServerGroup.PUT("/update/:webhookId", webhookServerController.UpdateWebhook)
 	}
 }

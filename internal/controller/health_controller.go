@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/cclhsu/gin-realtime/internal/model"
@@ -16,14 +17,14 @@ type HealthControllerInterface interface {
 }
 
 type HealthController struct {
-	// ctx	  context.Context
+	ctx           context.Context
 	logger        *logrus.Logger
 	healthService *service.HealthService
 }
 
-func NewHealthController(logger *logrus.Logger, healthService *service.HealthService) *HealthController {
+func NewHealthController(ctx context.Context, logger *logrus.Logger, healthService *service.HealthService) *HealthController {
 	return &HealthController{
-		// ctx:	   ctx,
+		ctx:           ctx,
 		logger:        logger,
 		healthService: healthService,
 	}

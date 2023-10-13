@@ -1,16 +1,80 @@
+basePath: /
 definitions:
   model.Data:
     properties:
       message:
         type: string
     type: object
+  model.EventDataDTO:
+    properties:
+      data: {}
+      id:
+        type: string
+      type:
+        type: string
+    type: object
+  model.EventDataResponseDTO:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   model.HelloJsonResponse:
     properties:
       data:
         $ref: '#/definitions/model.Data'
     type: object
+  model.WebhookConfigDTO:
+    properties:
+      isActive:
+        type: boolean
+      secret:
+        type: string
+      type:
+        $ref: '#/definitions/model.WebhookType'
+    type: object
+  model.WebhookInfoDTO:
+    properties:
+      config:
+        $ref: '#/definitions/model.WebhookConfigDTO'
+      expiryDate:
+        type: string
+      id:
+        type: string
+      url:
+        type: string
+    type: object
+  model.WebhookRegistrationResponseDTO:
+    properties:
+      data: {}
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  model.WebhookType:
+    enum:
+    - test
+    - dev
+    - prod
+    - broadcast
+    - system
+    - exclusive
+    type: string
+    x-enum-varnames:
+    - Test
+    - Dev
+    - Prod
+    - Broadcast
+    - System
+    - Exclusive
 info:
   contact: {}
+  description: This is a sample API server using Gin and Swagger.
+  title: My API
+  version: "1.0"
 paths:
   /health/healthy:
     get:
@@ -168,4 +232,315 @@ paths:
       summary: get hello world string
       tags:
       - hello
+  /webhook-client/disconnect/{webhookId}:
+    put:
+      consumes:
+      - application/json
+      description: disconnect webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: disconnect webhook
+      tags:
+      - webhook-client
+  /webhook-client/handle-payload:
+    post:
+      consumes:
+      - application/json
+      description: handle triggered event
+      parameters:
+      - description: Event Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.EventDataDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EventDataResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: handle triggered event
+      tags:
+      - webhook-client
+  /webhook-client/register:
+    post:
+      consumes:
+      - application/json
+      description: register webhook
+      parameters:
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.WebhookInfoDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: register webhook
+      tags:
+      - webhook-client
+  /webhook-client/trigger-event:
+    post:
+      consumes:
+      - application/json
+      description: trigger event
+      parameters:
+      - description: Event Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.EventDataDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.EventDataResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: trigger event
+      tags:
+      - webhook-client
+  /webhook/{webhookId}:
+    delete:
+      consumes:
+      - application/json
+      description: unregister webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: unregister webhook
+      tags:
+      - webhook
+    put:
+      consumes:
+      - application/json
+      description: update webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.WebhookInfoDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: update webhook
+      tags:
+      - webhook
+  /webhook/handle-event:
+    post:
+      consumes:
+      - application/json
+      description: list registered webhooks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.WebhookInfoDTO'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: list registered webhooks
+      tags:
+      - webhook
+  /webhook/list:
+    get:
+      consumes:
+      - application/json
+      description: update webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.WebhookInfoDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: update webhook
+      tags:
+      - webhook
+  /webhook/register:
+    post:
+      consumes:
+      - application/json
+      description: register webhook
+      parameters:
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.WebhookInfoDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: register webhook
+      tags:
+      - webhook
+schemes:
+- http
+- https
 swagger: "2.0"

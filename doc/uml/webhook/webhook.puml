@@ -1,0 +1,290 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class WebhookServer
+' class WebhookClient
+
+' User --> Service : Register Webhook
+' Service --> WebhookServer : POST /webhooks
+' WebhookServer --> Service : 201 Created or Error
+' Service --> WebhookServer : POST /webhooks/{webhook_id}/payloads
+' WebhookServer --> Service : Deliver Payload
+' User --> Service : Disconnect Webhook
+' Service --> WebhookServer : DELETE /webhooks/{webhook_id}
+' WebhookServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Webhook Server" as WebhookServer {
+    class WebhookServerController {
+        + POST /webhooks: string
+        + POST /webhooks/events: string
+        + DELETE /webhooks/{webhook_id}: string
+        + GET /webhooks: string
+        + PUT /webhooks/{webhook_id}: string
+    }
+
+    ' class WebhookServerService {
+    '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+    '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+    '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+    '     + listRegisteredWebhooks(): Promise<WebhookInfoDTO[]>
+    '     + updateWebhook(webhookId: string, request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+    ' }
+
+    ' class WebhookServerRepository {
+    '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+    '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+    '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+    '     + listRegisteredWebhooks(): Promise<WebhookInfoDTO[]>
+    '     + updateWebhook(webhookId: string, request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+    ' }
+
+    ' class WebhookInfoDTO {
+    '     + id: string
+    '     + url: string
+    '     + expiryDate: Date
+    '     + config: WebhookConfigDTO
+    ' }
+
+    ' class EventDataDTO {
+    '     + id: string
+    '     + type: string
+    '     + data: any
+    ' }
+
+    ' class WebhookConfigDTO {
+    '     + secret: string
+    '     + isActive: boolean
+    '     + type: WebhookType
+    ' }
+
+    ' class WebhookRegistrationResponseDTO {
+    '     + success: boolean
+    '     + message: string
+    '     + data: any
+    ' }
+
+    ' class WebhookType {
+    '     + name: string
+    '     + version: string
+    ' }
+
+    ' WebhookServerController --> WebhookServerService : Register Webhook
+    ' WebhookServerService --> WebhookServerRepository : Register Webhook
+    ' WebhookServerRepository --> WebhookServerService : 201 Created or Error
+    ' WebhookServerService --> WebhookServerController : 201 Created or Error
+
+    ' WebhookServerController --> WebhookServerService : Deliver Payload
+    ' WebhookServerService --> WebhookServerRepository : Deliver Payload
+    ' WebhookServerRepository --> WebhookServerService : 200 OK or Error
+    ' WebhookServerService --> WebhookServerController : 200 OK or Error
+
+    ' WebhookServerController --> WebhookServerService : Disconnect Webhook
+    ' WebhookServerService --> WebhookServerRepository : Disconnect Webhook
+    ' WebhookServerRepository --> WebhookServerService : 204 No Content or Error
+    ' WebhookServerService --> WebhookServerController : 204 No Content or Error
+}
+
+package "Webhook Clients" as WebhookClients {
+    package "Webhook Client 1" as WebhookClient1 {
+        class WebhookClient1Controller {
+            + POST /webhook-client/register: string
+            + POST /webhook-client/triggers: string
+            + POST /webhook-client/handle-event: string
+            + POST /webhook-client/disconnect/{webhook_id}: string
+        }
+
+        ' class WebhookClient1Service {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+        
+        ' class WebhookClient1Repository {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Register Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Register Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 201 Created or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 201 Created or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Send Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Send Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Receive Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Receive Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Disconnect Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Disconnect Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 204 No Content or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 204 No Content or Error
+    }
+
+    package "Webhook Client 2" as WebhookClient2 {
+        class WebhookClient2Controller {
+            + POST /webhook-client/register: string
+            + POST /webhook-client/triggers: string
+            + POST /webhook-client/handle-event: string
+            + POST /webhook-client/disconnect/{webhook_id}: string
+        }
+
+        ' class WebhookClient2Service {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+        
+        ' class WebhookClient2Repository {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Register Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Register Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 201 Created or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 201 Created or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Send Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Send Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Receive Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Receive Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Disconnect Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Disconnect Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 204 No Content or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 204 No Content or Error
+    }
+
+    package "Webhook Client 3" as WebhookClient3 {
+        class WebhookClient3Controller {
+            + POST /webhook-client/register: string
+            + POST /webhook-client/triggers: string
+            + POST /webhook-client/handle-event: string
+            + POST /webhook-client/disconnect/{webhook_id}: string
+        }
+
+        ' class WebhookClient3Service {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+        
+        ' class WebhookClient3Repository {
+        '     + registerWebhook(request: WebhookInfoDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + sendWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + handleWebhookEvent(payload: EventDataDTO): Promise<WebhookRegistrationResponseDTO>
+        '     + unregisterWebhook(webhookId: string): Promise<WebhookRegistrationResponseDTO>
+        ' }
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Register Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Register Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 201 Created or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 201 Created or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Send Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Send Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Receive Payload
+        ' WebhookClient1Service --> WebhookClient1Repository : Receive Payload
+        ' WebhookClient1Repository --> WebhookClient1Service : 200 OK or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 200 OK or Error
+
+        ' WebhookClient1Controller --> WebhookClient1Service : Disconnect Webhook
+        ' WebhookClient1Service --> WebhookClient1Repository : Disconnect Webhook
+        ' WebhookClient1Repository --> WebhookClient1Service : 204 No Content or Error
+        ' WebhookClient1Service --> WebhookClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: WebhookPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> WebhookServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackWebhookPerformance(webhookId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logWebhookEvent(eventData: WebhookEvent): void
+'     }
+
+'     ' MonitoringService --> WebhookServer : trackWebhookPerformance()
+'     ' LoggingService --> WebhookServer : logWebhookEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: WebhookEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> WebhookServer : trackEvent()
+' }
+
+WebhookClient1 --> WebhookServer : POST /webhooks
+WebhookClient2 --> WebhookServer : POST /webhooks
+WebhookClient3 --> WebhookServer : POST /webhooks
+
+WebhookServer --> WebhookClient1 : 201 Created or Error
+WebhookServer --> WebhookClient2 : 201 Created or Error
+WebhookServer --> WebhookClient3 : 201 Created or Error
+
+WebhookClient1 --> WebhookServer : POST /webhooks/{webhook_id}/payloads
+WebhookClient2 --> WebhookServer : POST /webhooks/{webhook_id}/payloads
+WebhookClient3 --> WebhookServer : POST /webhooks/{webhook_id}/payloads
+
+WebhookServer --> WebhookClient1 : Deliver Payload
+WebhookServer --> WebhookClient2 : Deliver Payload
+WebhookServer --> WebhookClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> WebhookServer : Track Webhook Performance
+' LoggingService --> WebhookServer : Log Webhook Event
+' EventTrackingService --> WebhookServer : Track Event
+
+@enduml

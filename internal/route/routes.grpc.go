@@ -12,7 +12,7 @@ package route
 //	userGrpcService "github.com/cclhsu/gin-realtime/generated/grpc/pb/user"
 // )
 
-// func SetupGrpcRoutes(grpcServer *grpc.Server, authService *service.AuthService, userService *service.UserService, teamService *service.TeamService, helloService *service.HelloService, healthService *service.HealthService) {
+// func SetupGrpcRoutes(ctx context.Context, grpcServer *grpc.Server, authService *service.AuthService, userService *service.UserService, teamService *service.TeamService, helloService *service.HelloService, healthService *service.HealthService) {
 
 //	// Register Auth service server
 //	authGrpcServiceServer := grpc_service_server.NewAuthServiceServer(authService)

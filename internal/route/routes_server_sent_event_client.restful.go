@@ -1,10 +1,10 @@
 package route
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
-	openapiDocs "github.com/cclhsu/gin-realtime/doc/openapi"
 	"github.com/cclhsu/gin-realtime/internal/controller"
 	"github.com/sirupsen/logrus"
 
@@ -18,11 +18,11 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulServerSentEventClientRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulServerSentEventClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
 
 	// Create instances of the controller
-	helloController := controller.NewHelloController(logger, helloService)
-	healthController := controller.NewHealthController(logger, healthService)
+	helloController := controller.NewHelloController(ctx, logger, helloService)
+	healthController := controller.NewHealthController(ctx, logger, healthService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -61,7 +61,8 @@ func SetupRestfulServerSentEventClientRoutes(r *gin.Engine, host string, port st
 	// docGroup := r.Group("/api/v1/doc")
 	docGroup := r.Group("/doc")
 	{
-		openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfoserver_sent_event_client_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

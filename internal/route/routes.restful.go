@@ -4,7 +4,7 @@ package route
 // 	"fmt"
 // 	"net/http"
 
-// 	openapiDocs "github.com/cclhsu/gin-realtime/doc/openapi"
+// 	openapiDocs "github.com/cclhsu/gin-realtime/doc/openapi/gin-restful-gorm"
 // 	"github.com/cclhsu/gin-realtime/internal/controller"
 // 	"github.com/sirupsen/logrus"
 
@@ -18,11 +18,11 @@ package route
 // )
 
 // // SetupRoutes sets up the API routes
-// func SetupRestfulRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+// func SetupRestfulRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
 
 // 	// Create instances of the controller
-// 	helloController := controller.NewHelloController(logger, helloService)
-// 	healthController := controller.NewHealthController(logger, healthService)
+// 	helloController := controller.NewHelloController(ctx, logger, helloService)
+// 	healthController := controller.NewHealthController(ctx, logger, healthService)
 
 // 	// Enable CORS middleware
 // 	r.Use(func(c *gin.Context) {

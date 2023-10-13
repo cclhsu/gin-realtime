@@ -90,6 +90,9 @@ func setupLogger() {
 
 func startGinServer() {
 	host = os.Getenv("SERVICE_HOST")
+	if host == "" {
+		host = "0.0.0.0"
+	}
 	port = os.Getenv("SERVICE_PORT")
 	if port == "" {
 		port = "8080"
@@ -104,8 +107,8 @@ func startGinServer() {
 	// Set up Gin server
 	router := gin.Default()
 
-	route.SetupRestfulKafkaServerRoutes(router, host, port, logger, helloService, healthService)
-	// route.SetupGraphQLRoutes(router, host, port, logger, authService, userService, teamService, helloService, healthService)
+	route.SetupRestfulKafkaServerRoutes(ctx, router, host, port, logger, helloService, healthService)
+	// route.SetupGraphQLRoutes(ctx, router, host, port, logger, authService, userService, teamService, helloService, healthService)
 
 	// // Add redis client to gin context
 	// router.Use(func(c *gin.Context) {
@@ -121,6 +124,12 @@ func startGinServer() {
 		logger.Fatalf("Failed to start the server: %v", err)
 	}
 }
+
+// @title My API
+// @description This is a sample API server using Gin and Swagger.
+// @version 1.0
+// @BasePath /
+// @schemes http https
 func main() {
 	// Create a context
 	ctx = context.Background()

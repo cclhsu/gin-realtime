@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/cclhsu/gin-realtime/internal/service"
@@ -14,14 +15,14 @@ type HelloControllerInterface interface {
 }
 
 type HelloController struct {
-	// ctx	  context.Context
+	ctx          context.Context
 	logger       *logrus.Logger
 	helloService *service.HelloService
 }
 
-func NewHelloController(logger *logrus.Logger, helloService *service.HelloService) *HelloController {
+func NewHelloController(ctx context.Context, logger *logrus.Logger, helloService *service.HelloService) *HelloController {
 	return &HelloController{
-		// ctx:	   ctx,
+		ctx:          ctx,
 		logger:       logger,
 		helloService: helloService,
 	}

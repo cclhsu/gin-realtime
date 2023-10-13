@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"context"
+
 	"github.com/cclhsu/gin-realtime/internal/service"
 	"github.com/sirupsen/logrus"
 )
@@ -9,14 +11,14 @@ type KafkaClientControllerInterface interface {
 }
 
 type KafkaClientController struct {
-	// ctx	  context.Context
+	ctx                context.Context
 	logger             *logrus.Logger
 	kafkaClientService *service.KafkaClientService
 }
 
-func NewKafkaClientController(logger *logrus.Logger, kafkaClientService *service.KafkaClientService) *KafkaClientController {
+func NewKafkaClientController(ctx context.Context, logger *logrus.Logger, kafkaClientService *service.KafkaClientService) *KafkaClientController {
 	return &KafkaClientController{
-		// ctx:	   ctx,
+		ctx:                ctx,
 		logger:             logger,
 		kafkaClientService: kafkaClientService,
 	}

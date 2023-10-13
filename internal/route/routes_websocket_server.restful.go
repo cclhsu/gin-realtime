@@ -1,6 +1,7 @@
 package route
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -18,11 +19,11 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebsocketServerRoutes(r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebsocketServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
 
 	// Create instances of the controller
-	helloController := controller.NewHelloController(logger, helloService)
-	healthController := controller.NewHealthController(logger, healthService)
+	helloController := controller.NewHelloController(ctx, logger, helloService)
+	healthController := controller.NewHealthController(ctx, logger, healthService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
