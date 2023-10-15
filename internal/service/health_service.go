@@ -14,13 +14,13 @@ type HealthServiceInterface interface {
 }
 
 type HealthService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewHealthService(ctx context.Context, logger *logrus.Logger) *HealthService {
 	return &HealthService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

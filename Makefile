@@ -1,4 +1,5 @@
 #*******************************************************************************
+# MAKEFILE_TYPE :=
 # Makefile for {{ projectName }}/{{ projectType }}
 #*******************************************************************************
 # Purpose:
@@ -23,6 +24,11 @@ PROJECT_NAME := gin-realtime
 #*******************************************************************************
 #*******************************************************************************
 # Main
+#*******************************************************************************
+# INTERNAL VARIABLES
+# Read all subsequent tasks as arguments of the first task
+RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+$(eval $(args) $(RUN_ARGS):;@:)
 #*******************************************************************************
 .DEFAULT_GOAL := help
 
@@ -49,6 +55,7 @@ install:  ## Install packages for the project
 	go get github.com/go-redis/redis/v8
 	go get github.com/golang-jwt/jwt
 	go get github.com/google/uuid
+	go get github.com/gorilla/websocket
 	go get github.com/joho/godotenv
 	go get github.com/patrickmn/go-cache
 	go get github.com/sirupsen/logrus
@@ -74,7 +81,7 @@ install:  ## Install packages for the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: update
-update:  ## Update packages for the project
+update:	 ## Update packages for the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Update packages for the project"
 	export GO111MODULE=on
@@ -84,7 +91,7 @@ update:  ## Update packages for the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: build
-build:  ## Build the project
+build:	## Build the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Build the project"
 	@# swag init -g cmd/${PROJECT_NAME}/main.go -o doc/openapi
@@ -115,11 +122,27 @@ build:  ## Build the project
 	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
 	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
 	@echo
+	@SERVICE_NAME=redis-consumer-service; \
+	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
+	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
+	@echo
+	@SERVICE_NAME=redis-producer-service; \
+	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
+	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
+	@echo
 	@SERVICE_NAME=server-sent-event-client-service; \
 	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
 	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
 	@echo
 	@SERVICE_NAME=server-sent-event-server-service; \
+	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
+	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
+	@echo
+	@SERVICE_NAME=socket-io-client-service; \
+	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
+	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
+	@echo
+	@SERVICE_NAME=socket-io-server-service; \
 	swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi; \
 	go build -o ./bin/$$SERVICE_NAME ./cmd/$$SERVICE_NAME
 	@echo
@@ -150,7 +173,7 @@ build:  ## Build the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: start
-start:  ## Start the project
+start:	## Start the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Start the project"
 	swag init -g cmd/${PROJECT_NAME}/main.go -o doc/openapi
@@ -173,7 +196,7 @@ bash:  ## Bash the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: status
-status:  ## Status the project
+status:	 ## Status the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Status the project"
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
@@ -204,7 +227,7 @@ package:  ## Package the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: deploy
-deploy:  ## Deploy the project
+deploy:	 ## Deploy the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Deploy the project"
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
@@ -216,7 +239,7 @@ undeploy:  ## Undeploy the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: clean
-clean:  ## Clean the project
+clean:	## Clean the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Clean the project"
 	go clean -i -r -cache -testcache -modcache
@@ -250,11 +273,23 @@ generate_openapi:  ## Generate openapi for the project
 	# @echo
 	# @SERVICE_NAME=kafka-producer-service; \
 	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
+	 @echo
+	# @SERVICE_NAME=redis-consumer-service; \
+	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
+	# @echo
+	# @SERVICE_NAME=redis-producer-service; \
+	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
 	# @echo
 	# @SERVICE_NAME=server-sent-event-client-service; \
 	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
 	# @echo
 	# @SERVICE_NAME=server-sent-event-server-service; \
+	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
+	# @echo
+	# @SERVICE_NAME=socket-io-client-service; \
+	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
+	# @echo
+	# @SERVICE_NAME=socket-io-server-service; \
 	# swag init -g cmd/$$SERVICE_NAME/main.go -o doc/openapi
 	# @echo
 	# @SERVICE_NAME=webhook-client-service; \
@@ -278,7 +313,7 @@ generate_openapi:  ## Generate openapi for the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_graphql_server
-run_graphql_server:  ## Run the graphql server
+run_graphql_server:	 ## Run the graphql server
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the graphql server"
 	./bin/graphql-server-service
@@ -320,17 +355,31 @@ run_grpc_client2:  ## Run the grpc client2
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_kafka_producer
-run_kafka_producer:  ## Run the kafka producer
+run_kafka_producer:	 ## Run the kafka producer
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the kafka producer"
 	./bin/kafka-producer-service
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_kafka_consumer
-run_kafka_consumer:  ## Run the kafka consumer
+run_kafka_consumer:	 ## Run the kafka consumer
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the kafka consumer"
 	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3002 ./bin/kafka-consumer-service
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: run_redis_producer
+run_redis_producer:	 ## Run the redis producer
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo "Run the redis producer"
+	./bin/redis-producer-service
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: run_redis_consumer
+run_redis_consumer:	 ## Run the redis consumer
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo "Run the redis consumer"
+	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3002 ./bin/redis-consumer-service
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_server_sent_event_server
@@ -341,21 +390,41 @@ run_server_sent_event_server:  ## Run the server sent event server
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_server_sent_event_client1
-run_server_sent_event_client1:  ## Run the server sent event client1
+run_server_sent_event_client1:	## Run the server sent event client1
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the server sent event client1"
 	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3002 ./bin/server-sent-event-client-service
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_server_sent_event_client2
-run_server_sent_event_client2:  ## Run the server sent event client2
+run_server_sent_event_client2:	## Run the server sent event client2
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the server sent event client2"
 	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3003 ./bin/server-sent-event-client-service
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
+.PHONY: run_socket_io_server
+run_socket_io_server:  ## Run the server sent event server
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo "Run the server sent event server"
+	./bin/socket-io-server-service
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: run_socket_io_client1
+run_socket_io_client1:	## Run the server sent event client1
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo "Run the server sent event client1"
+	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3002 ./bin/socket-io-client-service
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: run_socket_io_client2
+run_socket_io_client2:	## Run the server sent event client2
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo "Run the server sent event client2"
+	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3003 ./bin/socket-io-client-service
+
 .PHONY: run_webhook_server
-run_webhook_server:  ## Run the webhook server
+run_webhook_server:	 ## Run the webhook server
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the webhook server"
 	./bin/webhook-server-service
@@ -376,7 +445,7 @@ run_webhook_client2:  ## Run the webhook client2
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_webpush_server
-run_webpush_server:  ## Run the webpush server
+run_webpush_server:	 ## Run the webpush server
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the webpush server"
 	./bin/webpush-server-service
@@ -404,14 +473,14 @@ run_websocket_server:  ## Run the websocket server
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_websocket_client1
-run_websocket_client1:  ## Run the websocket client1
+run_websocket_client1:	## Run the websocket client1
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the websocket client1"
 	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3002 ./bin/websocket-client-service
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: run_websocket_client2
-run_websocket_client2:  ## Run the websocket client2
+run_websocket_client2:	## Run the websocket client2
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Run the websocket client2"
 	SERVER_HOST=0.0.0.0 SERVER_PORT=3001 SERVICE_PORT=3003 ./bin/websocket-client-service

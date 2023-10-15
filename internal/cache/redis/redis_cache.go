@@ -16,14 +16,14 @@ type RedisCacheInterface interface {
 }
 
 type RedisCache struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 	client *redis.Client
 }
 
 func NewRedisCache(ctx context.Context, logger *logrus.Logger, client *redis.Client) *RedisCache {
 	return &RedisCache{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 		client: client,
 	}

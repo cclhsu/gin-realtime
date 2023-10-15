@@ -11,15 +11,15 @@ type GrpcServerControllerInterface interface {
 }
 
 type GrpcServerController struct {
-	ctx               context.Context
-	logger            *logrus.Logger
+	ctx				  context.Context
+	logger			  *logrus.Logger
 	grpcServerService *service.GrpcServerService
 }
 
 func NewGrpcServerController(ctx context.Context, logger *logrus.Logger, grpcServerService *service.GrpcServerService) *GrpcServerController {
 	return &GrpcServerController{
-		ctx:               ctx,
-		logger:            logger,
+		ctx:			   ctx,
+		logger:			   logger,
 		grpcServerService: grpcServerService,
 	}
 }

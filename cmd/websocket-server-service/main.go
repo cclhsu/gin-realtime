@@ -29,8 +29,9 @@ var (
 	endpoint string
 	router   *gin.Engine
 
-	helloService  *service.HelloService
-	healthService *service.HealthService
+	helloService           *service.HelloService
+	healthService          *service.HealthService
+	websocketServerService *service.WebsocketServerService
 )
 
 // CallerPrettyfier is a function that formats the caller information.
@@ -107,13 +108,13 @@ func startGinServer() {
 	// Set up Gin server
 	router := gin.Default()
 
-	route.SetupRestfulWebsocketServerRoutes(ctx, router, host, port, logger, helloService, healthService)
+	route.SetupRestfulWebsocketServerRoutes(ctx, router, host, port, logger, helloService, healthService, websocketServerService)
 	// route.SetupGraphQLRoutes(ctx, router, host, port, logger, authService, userService, teamService, helloService, healthService)
 
 	// // Add redis client to gin context
 	// router.Use(func(c *gin.Context) {
-	// 	c.Set("redis", redisClient)
-	// 	c.Next()
+	//	c.Set("redis", redisClient)
+	//	c.Next()
 	// })
 
 	fmt.Printf("Starting up on http://%s/\n", endpoint)
@@ -148,6 +149,9 @@ func main() {
 
 	// Create the health check service
 	healthService = service.NewHealthService(ctx, logger)
+
+	// Create the websocket server service
+	websocketServerService = service.NewWebsocketServerService(ctx, logger)
 
 	// Start Gin server in a goroutine
 	go startGinServer()

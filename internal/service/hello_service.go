@@ -13,13 +13,13 @@ type HelloServiceInterface interface {
 }
 
 type HelloService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewHelloService(ctx context.Context, logger *logrus.Logger) *HelloService {
 	return &HelloService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

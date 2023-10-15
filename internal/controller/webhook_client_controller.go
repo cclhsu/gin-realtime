@@ -18,15 +18,15 @@ type WebhookClientControllerInterface interface {
 }
 
 type WebhookClientController struct {
-	ctx                  context.Context
-	logger               *logrus.Logger
+	ctx					 context.Context
+	logger				 *logrus.Logger
 	webhookClientService *service.WebhookClientService
 }
 
 func NewWebhookClientController(ctx context.Context, logger *logrus.Logger, webhookClientService *service.WebhookClientService) *WebhookClientController {
 	return &WebhookClientController{
-		ctx:                  ctx,
-		logger:               logger,
+		ctx:				  ctx,
+		logger:				  logger,
 		webhookClientService: webhookClientService,
 	}
 }

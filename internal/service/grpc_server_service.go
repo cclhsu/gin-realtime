@@ -10,13 +10,13 @@ type GrpcServerInterface interface {
 }
 
 type GrpcServerService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewGrpcServerService(ctx context.Context, logger *logrus.Logger) *GrpcServerService {
 	return &GrpcServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

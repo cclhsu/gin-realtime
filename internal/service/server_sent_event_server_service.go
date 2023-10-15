@@ -10,13 +10,13 @@ type ServerSentEventServerInterface interface {
 }
 
 type ServerSentEventServerService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewServerSentEventServerService(ctx context.Context, logger *logrus.Logger) *ServerSentEventServerService {
 	return &ServerSentEventServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

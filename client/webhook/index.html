@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Webhook Client</title>
+</head>
+
+<body>
+    <h1>Webhook Client</h1>
+    <div>
+        <label for="webhookUrl">Webhook URL:</label>
+        <input type="text" id="webhookUrl" placeholder="Enter Webhook URL">
+    </div>
+    <div>
+        <label for="payload">Payload:</label>
+        <textarea id="payload" placeholder="Enter JSON payload"></textarea>
+    </div>
+    <button id="sendButton">Send Webhook</button>
+
+    <h2>Response:</h2>
+    <div id="response"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const webhookUrlInput = document.getElementById("webhookUrl");
+            const payloadInput = document.getElementById("payload");
+            const sendButton = document.getElementById("sendButton");
+            const responseDiv = document.getElementById("response");
+
+            sendButton.addEventListener("click", function () {
+                const webhookUrl = webhookUrlInput.value;
+                const payload = payloadInput.value;
+
+                if (!webhookUrl || !payload) {
+                    responseDiv.innerHTML = "Webhook URL and payload are required.";
+                    return;
+                }
+
+                try {
+                    const jsonPayload = JSON.parse(payload);
+                    const requestOptions = {
+                        method: "POST",
+                        body: JSON.stringify(jsonPayload),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    };
+
+                    fetch(webhookUrl, requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                            responseDiv.innerHTML = JSON.stringify(data, null, 2);
+                        })
+                        .catch(error => {
+                            responseDiv.innerHTML = "Error: " + error.message;
+                        });
+                } catch (error) {
+                    responseDiv.innerHTML = "Invalid JSON payload: " + error.message;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

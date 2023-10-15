@@ -15,15 +15,15 @@ type HelloControllerInterface interface {
 }
 
 type HelloController struct {
-	ctx          context.Context
-	logger       *logrus.Logger
+	ctx			 context.Context
+	logger		 *logrus.Logger
 	helloService *service.HelloService
 }
 
 func NewHelloController(ctx context.Context, logger *logrus.Logger, helloService *service.HelloService) *HelloController {
 	return &HelloController{
-		ctx:          ctx,
-		logger:       logger,
+		ctx:		  ctx,
+		logger:		  logger,
 		helloService: helloService,
 	}
 }

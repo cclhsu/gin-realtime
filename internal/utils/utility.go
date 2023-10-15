@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/golang-jwt/jwt"
@@ -86,4 +87,17 @@ func SendRequest(logger *logrus.Logger, url string, method string, payload inter
 		return nil, err
 	}
 	return response, nil
+}
+
+func LocalIp() string {
+	address, _ := net.InterfaceAddrs()
+	var ip = "localhost"
+	for _, address := range address {
+		if ipAddress, ok := address.(*net.IPNet); ok && !ipAddress.IP.IsLoopback() {
+			if ipAddress.IP.To4() != nil {
+				ip = ipAddress.IP.String()
+			}
+		}
+	}
+	return ip
 }

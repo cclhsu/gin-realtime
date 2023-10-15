@@ -10,13 +10,13 @@ type KafkaServerInterface interface {
 }
 
 type KafkaServerService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewKafkaServerService(ctx context.Context, logger *logrus.Logger) *KafkaServerService {
 	return &KafkaServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

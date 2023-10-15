@@ -20,17 +20,17 @@ type WebhookServerInterface interface {
 }
 
 type WebhookServerService struct {
-	ctx                   context.Context
-	logger                *logrus.Logger
-	WebhookConfigs        sync.Map
-	EventDataDTOs         sync.Map
-	WebhookConnections    sync.Map
+	ctx					  context.Context
+	logger				  *logrus.Logger
+	WebhookConfigs		  sync.Map
+	EventDataDTOs		  sync.Map
+	WebhookConnections	  sync.Map
 	WebhookDisconnections sync.Map
 }
 
 func NewWebhookServerService(ctx context.Context, logger *logrus.Logger) *WebhookServerService {
 	return &WebhookServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }
@@ -45,7 +45,7 @@ func (wss *WebhookServerService) RegisterWebhook(request model.WebhookInfoDTO) (
 	return model.WebhookRegistrationResponseDTO{
 		Success: true,
 		Message: fmt.Sprintf("Webhook %s registered successfully", request.ID),
-		Data:    request,
+		Data:	 request,
 	}, nil
 }
 
@@ -103,7 +103,7 @@ func (wss *WebhookServerService) HandleWebhookEvent(payload model.EventDataDTO) 
 	return model.WebhookRegistrationResponseDTO{
 		Success: true,
 		Message: fmt.Sprintf("Webhook event %s received successfully", payload.ID),
-		Data:    nil,
+		Data:	 nil,
 	}, nil
 }
 
@@ -117,7 +117,7 @@ func (wss *WebhookServerService) UnregisterWebhook(webhookID string) (model.Webh
 	return model.WebhookRegistrationResponseDTO{
 		Success: true,
 		Message: fmt.Sprintf("Webhook %s unregistered successfully", webhookID),
-		Data:    nil,
+		Data:	 nil,
 	}, nil
 }
 
@@ -142,6 +142,6 @@ func (wss *WebhookServerService) UpdateWebhook(webhookID string, request model.W
 	return model.WebhookRegistrationResponseDTO{
 		Success: true,
 		Message: fmt.Sprintf("Webhook %s updated successfully", webhookID),
-		Data:    nil,
+		Data:	 nil,
 	}, nil
 }

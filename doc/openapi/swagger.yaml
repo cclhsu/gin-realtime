@@ -76,6 +76,126 @@ info:
   title: My API
   version: "1.0"
 paths:
+  /graphql/health:
+    get:
+      consumes:
+      - application/json
+      description: graphql client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: graphql client health
+      tags:
+      - graphql
+  /graphql/trigger:
+    get:
+      consumes:
+      - application/json
+      description: graphql client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: graphql client trigger message
+      tags:
+      - graphql
+  /grpc/health:
+    get:
+      consumes:
+      - application/json
+      description: grpc client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: grpc client health
+      tags:
+      - grpc
+  /grpc/trigger:
+    get:
+      consumes:
+      - application/json
+      description: grpc client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: grpc client trigger message
+      tags:
+      - grpc
   /health/healthy:
     get:
       consumes:
@@ -232,6 +352,186 @@ paths:
       summary: get hello world string
       tags:
       - hello
+  /kafka/health:
+    get:
+      consumes:
+      - application/json
+      description: kafka client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: kafka client health
+      tags:
+      - kafka
+  /kafka/trigger:
+    get:
+      consumes:
+      - application/json
+      description: kafka client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: kafka client trigger message
+      tags:
+      - kafka
+  /redis/health:
+    get:
+      consumes:
+      - application/json
+      description: redis client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: redis client health
+      tags:
+      - redis
+  /redis/trigger:
+    get:
+      consumes:
+      - application/json
+      description: redis client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: redis client trigger message
+      tags:
+      - redis
+  /serversentevent/health:
+    get:
+      consumes:
+      - application/json
+      description: serversentevent client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: serversentevent client health
+      tags:
+      - serversentevent
+  /serversentevent/trigger:
+    get:
+      consumes:
+      - application/json
+      description: serversentevent client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: serversentevent client trigger message
+      tags:
+      - serversentevent
   /webhook-client/disconnect/{webhookId}:
     put:
       consumes:
@@ -540,6 +840,153 @@ paths:
       summary: register webhook
       tags:
       - webhook
+  /webpush/health:
+    get:
+      consumes:
+      - application/json
+      description: webpush client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webpush client health
+      tags:
+      - webpush
+  /webpush/trigger:
+    get:
+      consumes:
+      - application/json
+      description: webpush client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webpush client trigger message
+      tags:
+      - webpush
+  /websocket/health:
+    get:
+      consumes:
+      - application/json
+      description: websocket client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: websocket client health
+      tags:
+      - websocket
+  /websocket/trigger:
+    get:
+      consumes:
+      - application/json
+      description: websocket client trigger message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: websocket client trigger message
+      tags:
+      - websocket
+  /ws:
+    get:
+      consumes:
+      - application/json
+      description: websocket handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: websocket handler
+      tags:
+      - websocket
 schemes:
 - http
 - https

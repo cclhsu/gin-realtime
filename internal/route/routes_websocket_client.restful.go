@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebsocketClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebsocketClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, websocketClientService *service.WebsocketClientService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	websocketClientController := controller.NewWebsocketClientController(ctx, logger, websocketClientService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -80,5 +81,14 @@ func SetupRestfulWebsocketClientRoutes(ctx context.Context, r *gin.Engine, host 
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	websocketGroup := r.Group("/websocket")
+	{
+		// Get health check
+		websocketGroup.GET("/health", websocketClientController.Health)
+
+		// Send message to server
+		websocketGroup.GET("/trigger", websocketClientController.Trigger)
 	}
 }

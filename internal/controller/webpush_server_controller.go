@@ -11,15 +11,15 @@ type WebpushServerControllerInterface interface {
 }
 
 type WebpushServerController struct {
-	ctx                  context.Context
-	logger               *logrus.Logger
+	ctx					 context.Context
+	logger				 *logrus.Logger
 	webpushServerService *service.WebpushServerService
 }
 
 func NewWebpushServerController(ctx context.Context, logger *logrus.Logger, webpushServerService *service.WebpushServerService) *WebpushServerController {
 	return &WebpushServerController{
-		ctx:                  ctx,
-		logger:               logger,
+		ctx:				  ctx,
+		logger:				  logger,
 		webpushServerService: webpushServerService,
 	}
 }

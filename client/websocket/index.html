@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebSocket Client</title>
+</head>
+
+<body>
+    <h1>WebSocket Client</h1>
+    <div>
+        <label for="websocketUrl">WebSocket URL:</label>
+        <input type="text" id="websocketUrl" placeholder="Enter WebSocket URL" value="ws://localhost:3001/websocket/ws">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>WebSocket Messages:</h2>
+    <div id="messageContainer"></div>
+    <div>
+        <label for="messageInput">Message Type:</label>
+        <select id="messageType">
+            <option value="text">Text</option>
+            <option value="binary">Binary</option>
+        </select>
+        <input type="text" id="messageInput" placeholder="Enter a message">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const websocketUrlInput = document.getElementById("websocketUrl");
+            const connectButton = document.getElementById("connectButton");
+            const messageContainer = document.getElementById("messageContainer");
+            const messageInput = document.getElementById("messageInput");
+            const messageTypeSelect = document.getElementById("messageType");
+            const sendButton = document.getElementById("sendButton");
+            let socket;
+
+            connectButton.addEventListener("click", function () {
+                const websocketUrl = websocketUrlInput.value;
+                if (!websocketUrl) {
+                    alert("WebSocket URL is required.");
+                    return;
+                }
+
+                socket = new WebSocket(websocketUrl);
+
+                socket.onopen = function () {
+                    connectButton.disabled = true;
+                    sendButton.disabled = false;
+                };
+
+                socket.onmessage = function (event) {
+                    const message = event.data;
+                    const messageElement = document.createElement("p");
+                    messageElement.textContent = message;
+                    messageContainer.appendChild(messageElement);
+                };
+
+                socket.onclose = function () {
+                    connectButton.disabled = false;
+                    sendButton.disabled = true;
+                };
+
+                socket.onerror = function (error) {
+                    alert("WebSocket error: " + error.message);
+                };
+            });
+
+            sendButton.addEventListener("click", function () {
+                const messageType = messageTypeSelect.value;
+                const message = messageInput.value;
+                if (socket.readyState === WebSocket.OPEN && message) {
+                    const formattedMessage = `${messageType}: ${message}`;
+                    socket.send(formattedMessage);
+                    messageInput.value = "";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

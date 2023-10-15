@@ -23,9 +23,9 @@ type WebhookClientInterface interface {
 }
 
 type WebhookClientService struct {
-	ctx              context.Context
-	logger           *logrus.Logger
-	WebhookServerURL string
+	ctx                     context.Context
+	logger                  *logrus.Logger
+	webhookServerServiceURL string
 	// registeredWebhooks []model.WebhookInfoDTO
 }
 
@@ -37,8 +37,9 @@ func NewWebhookClientService(ctx context.Context, logger *logrus.Logger) *Webhoo
 }
 
 func (wcs *WebhookClientService) Initialize() {
-	wcs.WebhookServerURL = wcs.initializeWebhookServerURL()
-	wcs.logger.Infof("Webhook Server URL: %s\n", wcs.WebhookServerURL)
+	wcs.logger.Info("WebhookClientService Initialize")
+	wcs.webhookServerServiceURL = wcs.initializewebhookServerServiceURL()
+	wcs.logger.Infof("Webhook Server URL: %s\n", wcs.webhookServerServiceURL)
 
 	webhookData := model.WebhookInfoDTO{
 		ID:         uuid.New().String(),
@@ -51,13 +52,13 @@ func (wcs *WebhookClientService) Initialize() {
 		},
 	}
 	// wcs.registeredWebhooks = []model.WebhookInfoDTO{
-	// 	webhookData,
+	//	webhookData,
 	// }
 	// Initialize webhook server URL and register the webhook
 	wcs.RegisterWebhook(webhookData)
 }
 
-func (wcs *WebhookClientService) initializeWebhookServerURL() string {
+func (wcs *WebhookClientService) initializewebhookServerServiceURL() string {
 	SERVER_HOST := os.Getenv("SERVER_HOST")
 	if SERVER_HOST == "" {
 		SERVER_HOST = "0.0.0.0"
@@ -86,7 +87,7 @@ func (wcs *WebhookClientService) RegisterWebhook(webhookData model.WebhookInfoDT
 
 	// Simulate sending the request
 	// In a real implementation, you would make an HTTP POST request here
-	response, err := utils.SendRequest(wcs.logger, wcs.WebhookServerURL+"/register", "POST", webhookData)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register", "POST", webhookData)
 	if err != nil {
 		wcs.logger.Errorf("Webhook registration error: %s\n", err.Error())
 		return model.WebhookRegistrationResponseDTO{}, err
@@ -104,7 +105,7 @@ func (wcs *WebhookClientService) RegisterWebhook(webhookData model.WebhookInfoDT
 func (wcs *WebhookClientService) TriggerEvent(eventDataDTO model.EventDataDTO) (model.EventDataResponseDTO, error) {
 	wcs.logger.Infof("Triggering event: %+v\n", eventDataDTO)
 
-	response, err := utils.SendRequest(wcs.logger, wcs.WebhookServerURL+"/handle-event", "POST", eventDataDTO)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/handle-event", "POST", eventDataDTO)
 	if err != nil {
 		wcs.logger.Errorf("Event triggering error: %s\n, %+v", err.Error(), response)
 		return model.EventDataResponseDTO{}, err
@@ -134,7 +135,7 @@ func (wcs *WebhookClientService) HandleTriggeredEvent(eventDataDTO model.EventDa
 func (ws *WebhookClientService) ListRegisteredWebhooks() ([]model.WebhookInfoDTO, error) {
 	ws.logger.Infof("Listing registered webhooks\n")
 
-	response, err := utils.SendRequest(ws.logger, ws.WebhookServerURL+"/list", "GET", nil)
+	response, err := utils.SendRequest(ws.logger, ws.webhookServerServiceURL+"/list", "GET", nil)
 	if err != nil {
 		ws.logger.Errorf("Webhook listing error: %s\n", err.Error())
 		return nil, err
@@ -153,7 +154,7 @@ func (ws *WebhookClientService) ListRegisteredWebhooks() ([]model.WebhookInfoDTO
 func (wcs *WebhookClientService) DisconnectWebhook(webhookID string) (model.WebhookRegistrationResponseDTO, error) {
 	wcs.logger.Infof("Disconnecting webhook: %s\n", webhookID)
 
-	response, err := utils.SendRequest(wcs.logger, wcs.WebhookServerURL+"/unregister/"+webhookID, "DELETE", nil)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/unregister/"+webhookID, "DELETE", nil)
 	if err != nil {
 		wcs.logger.Errorf("Webhook disconnection error: %s\n", err.Error())
 		return model.WebhookRegistrationResponseDTO{}, err
