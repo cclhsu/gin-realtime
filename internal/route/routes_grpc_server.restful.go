@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulGrpcServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulGrpcServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, grpcServerService *service.GrpcServerService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	grpcServerController := controller.NewGrpcServerController(ctx, logger, grpcServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -80,5 +81,16 @@ func SetupRestfulGrpcServerRoutes(ctx context.Context, r *gin.Engine, host strin
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	grpcGroup := r.Group("/grpc")
+	{
+		// Get grpc handler
+		grpcGroup.GET("/handler", grpcServerController.GrpcHandler)
+		// grpcGroup.GET("/echo", grpcServerController.GrpcEchoHandler)
+		// grpcGroup.GET("/broadcast", grpcServerController.GrpcBroadcastHandler)
+		// grpcGroup.GET("/event", grpcServerController.GrpcEventHandler)
+		// grpcGroup.GET("/message", grpcServerController.GrpcMessageHandler)
+		// grpcGroup.GET("/health", grpcServerController.Grpc HealthHandler)
 	}
 }

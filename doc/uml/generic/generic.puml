@@ -1,0 +1,158 @@
+@startuml
+title Generic Client-Server Communication Design
+actor Client
+actor Server
+
+== Client-Side ==
+
+box "Client"
+participant ClientController
+participant ClientService
+end box
+
+Client -> ClientController: connect(endpoint)
+ClientController -> ClientService: initialize()
+ClientService -> ClientController: onConnected()
+ClientController -> ClientService: onConnected(callback)
+ClientService -> ClientController: onDisconnected()
+ClientController -> ClientService: onDisconnected(callback)
+ClientService -> ClientController: onHealthStatus()
+ClientController -> ClientService: onHealthStatus(callback)
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+Client -> ClientController: disconnect()
+ClientController -> ClientService: stop()
+ClientService -> ClientController: onDisconnected()
+ClientController -> ClientService: onDisconnected(callback)
+
+== Server-Side ==
+
+box "Server"
+participant ServerController
+participant ServerService
+' participant MessageHandler
+' participant MessageLogger
+' participant MessageFilter
+' participant MessageValidator
+' participant MessageSecurity
+' participant Authentication
+' participant Authorization
+' participant Throttling
+' participant MessageQueue
+' participant Persistence
+' participant Recovery
+' participant Replay
+' participant Deduplication
+' participant Batching
+end box
+
+Client -> ClientController: sendMessage(to, message)
+ClientController -> ClientService: send(data)
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+Client -> ClientController: receive(callback)
+ClientController -> ClientService: subscribe(callback)
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+Client -> ClientController: unsubscribe()
+ClientController -> ClientService: unsubscribe()
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+Client -> ClientController: send(data)
+ClientController -> ClientService: send(data)
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+Client -> ClientController: echo(data)
+ClientController -> ClientService: echo(data)
+ClientService -> ClientController: onMessageReceived()
+ClientController -> ClientService: onMessageReceived(callback)
+
+Server -> ServerController: startServer(port)
+ServerController -> ServerService: initialize()
+ServerService -> ServerController: onClientConnected()
+ServerController -> ServerService: onClientConnected(callback)
+ServerService -> ServerController: onClientDisconnected()
+ServerController -> ServerService: onClientDisconnected(callback)
+ServerService -> ServerController: onHealthStatus()
+ServerController -> ServerService: onHealthStatus(callback)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+ServerService -> ServerController: onSubscribe()
+ServerController -> ServerService: onSubscribe(clientId, callback)
+ServerService -> ServerController: onUnsubscribe()
+ServerController -> ServerService: onUnsubscribe(clientId)
+Server -> ServerController: stopServer()
+ServerController -> ServerService: stop()
+ServerService -> ServerController: onClientDisconnected()
+ServerController -> ServerService: onClientDisconnected(callback)
+Server -> ServerController: checkHealth()
+ServerController -> ServerService: checkHealth()
+ServerService -> ServerController: onHealthStatus()
+ServerController -> ServerService: onHealthStatus(callback)
+Server -> ServerController: handleClientConnection(client)
+ServerController -> ServerService: onClientConnected()
+ServerService -> ServerController: onClientConnected(callback)
+Server -> ServerController: broadcast(data)
+ServerController -> ServerService: broadcast(data)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+Server -> ServerController: sendMessage(clientId, message)
+ServerController -> ServerService: send(data)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+Server -> ServerController: echo(clientId, message)
+ServerController -> ServerService: echo(data)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+Server -> ServerController: subscribe(clientId, callback)
+ServerController -> ServerService: subscribe(clientId, callback)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+Server -> ServerController: unsubscribe(clientId)
+ServerController -> ServerService: unsubscribe(clientId)
+ServerService -> ServerController: onMessageReceived()
+ServerController -> ServerService: onMessageReceived(callback)
+
+' ClientController -> MessageHandler: handle(message)
+' MessageHandler -> MessageLogger: log(message)
+' MessageHandler -> MessageFilter: filter(message)
+' MessageHandler -> MessageValidator: validate(message)
+' MessageHandler -> MessageSecurity: secure(message)
+' MessageHandler -> Authentication: authenticate(message)
+' MessageHandler -> Authorization: authorize(message)
+' MessageHandler -> Throttling: throttle(message)
+' MessageHandler -> MessageQueue: queue(message)
+' MessageHandler -> Persistence: persist(message)
+' MessageHandler -> Recovery: recover(message)
+' MessageHandler -> Replay: replay(message)
+' MessageHandler -> Deduplication: deduplicate(message)
+' MessageHandler -> Batching: batch(message)
+' MessageHandler -> ServerController: send(message)
+' MessageHandler -> ClientController: send(message)
+' MessageHandler -> ClientController: receive(message)
+' MessageHandler -> ServerController: receive(message)
+' MessageHandler -> ClientController: subscribe(message)
+' MessageHandler -> ServerController: subscribe(message)
+' MessageHandler -> ClientController: unsubscribe(message)
+' MessageHandler -> ServerController: unsubscribe(message)
+' MessageHandler -> ClientController: echo(message)
+' MessageHandler -> ServerController: echo(message)
+' MessageHandler -> ClientController: checkHealth(message)
+' MessageHandler -> ServerController: checkHealth(message)
+' MessageHandler -> ClientController: onConnected(message)
+' MessageHandler -> ServerController: onConnected(message)
+' MessageHandler -> ClientController: onDisconnected(message)
+' MessageHandler -> ServerController: onDisconnected(message)
+' MessageHandler -> ClientController: onHealthStatus(message)
+' MessageHandler -> ServerController: onHealthStatus(message)
+' MessageHandler -> ClientController: onMessageReceived(message)
+' MessageHandler -> ServerController: onMessageReceived(message)
+' MessageHandler -> ClientController: onSubscribe(message)
+' MessageHandler -> ServerController: onSubscribe(message)
+' MessageHandler -> ClientController: onUnsubscribe(message)
+' MessageHandler -> ServerController: onUnsubscribe(message)
+' MessageHandler -> ClientController: stop(message)
+' MessageHandler -> ServerController: stop(message)
+' MessageHandler -> ClientController: initialize(message)
+' MessageHandler -> ServerController: initialize(message)
+@enduml

@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebpushServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebpushServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, webpushServerService *service.WebpushServerService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	webpushServerController := controller.NewWebpushServerController(ctx, logger, webpushServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -80,5 +81,16 @@ func SetupRestfulWebpushServerRoutes(ctx context.Context, r *gin.Engine, host st
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	webpushGroup := r.Group("/webpush")
+	{
+		// Get webpush handler
+		webpushGroup.GET("/handler", webpushServerController.WebpushHandler)
+		// webpushGroup.GET("/echo", webpushServerController.WebpushEchoHandler)
+		// webpushGroup.GET("/broadcast", webpushServerController.WebpushBroadcastHandler)
+		// webpushGroup.GET("/event", webpushServerController.WebpushEventHandler)
+		// webpushGroup.GET("/message", webpushServerController.WebpushMessageHandler)
+		// webpushGroup.GET("/health", webpushServerController.Webpush HealthHandler)
 	}
 }

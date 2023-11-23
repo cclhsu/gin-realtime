@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kafka WebSocket Client</title>
+</head>
+
+<body>
+    <h1>Kafka WebSocket Client</h1>
+    <div>
+        <label for="kafkaBroker">Kafka Broker URL:</label>
+        <input type="text" id="kafkaBroker" placeholder="Enter Kafka Broker URL" value="kafka:9092">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>Kafka Producer:</h2>
+    <div>
+        <label for="producerTopic">Topic:</label>
+        <input type="text" id="producerTopic" placeholder="Enter a topic">
+        <label for="producerMessage">Message:</label>
+        <input type="text" id="producerMessage" placeholder="Enter a message">
+        <button id="produceButton">Produce</button>
+    </div>
+
+    <h2>Kafka Consumer:</h2>
+    <div id="consumerContainer"></div>
+
+    <!-- https://cdn.jsdelivr.net/npm/kafkajs@2.2.4/ -->
+    <!-- https://cdn.jsdelivr.net/npm/webstomp-client@1.2.6/ -->
+    <script src="https://cdn.jsdelivr.net/npm/kafkajs@2.2.4/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/webstomp-client@1.2.6/dist/webstomp.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const kafkaBrokerInput = document.getElementById("kafkaBroker");
+            const connectButton = document.getElementById("connectButton");
+            const producerTopicInput = document.getElementById("producerTopic");
+            const producerMessageInput = document.getElementById("producerMessage");
+            const produceButton = document.getElementById("produceButton");
+            const consumerContainer = document.getElementById("consumerContainer");
+
+            let stompClient;
+
+            connectButton.addEventListener("click", function () {
+                const kafkaBroker = kafkaBrokerInput.value;
+                if (!kafkaBroker) {
+                    alert("Kafka Broker URL is required.");
+                    return;
+                }
+
+                stompClient = Stomp.client(kafkaBroker);
+                stompClient.connect({}, function () {
+                    connectButton.disabled = true;
+                    produceButton.disabled = false;
+
+                    // Subscribe to a Kafka topic
+                    stompClient.subscribe('/topic/KafkaTopic', function (message) {
+                        const messageElement = document.createElement("p");
+                        messageElement.textContent = message.body;
+                        consumerContainer.appendChild(messageElement);
+                    });
+                });
+            });
+
+            produceButton.addEventListener("click", function () {
+                const topic = producerTopicInput.value;
+                const message = producerMessageInput.value;
+                if (stompClient && topic && message) {
+                    stompClient.send("/app/produce", {}, JSON.stringify({
+                        topic: topic,
+                        message: message
+                    }));
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

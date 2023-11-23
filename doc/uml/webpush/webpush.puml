@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class WebpushServer
+' class WebpushClient
+
+' User --> Service : Register Webpush
+' Service --> WebpushServer : POST /webpushs
+' WebpushServer --> Service : 201 Created or Error
+' Service --> WebpushServer : POST /webpushs/{webpush_id}/payloads
+' WebpushServer --> Service : Deliver Payload
+' User --> Service : Disconnect Webpush
+' Service --> WebpushServer : DELETE /webpushs/{webpush_id}
+' WebpushServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Webpush Server" as WebpushServer {
+    class WebpushServerController {
+        + GET /health: string
+    }
+
+    ' class WebpushServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class WebpushServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' WebpushServerController --> WebpushServerService : Register Webpush
+    ' WebpushServerService --> WebpushServerRepository : Register Webpush
+    ' WebpushServerRepository --> WebpushServerService : 201 Created or Error
+    ' WebpushServerService --> WebpushServerController : 201 Created or Error
+
+    ' WebpushServerController --> WebpushServerService : Deliver Payload
+    ' WebpushServerService --> WebpushServerRepository : Deliver Payload
+    ' WebpushServerRepository --> WebpushServerService : 200 OK or Error
+    ' WebpushServerService --> WebpushServerController : 200 OK or Error
+
+    ' WebpushServerController --> WebpushServerService : Disconnect Webpush
+    ' WebpushServerService --> WebpushServerRepository : Disconnect Webpush
+    ' WebpushServerRepository --> WebpushServerService : 204 No Content or Error
+    ' WebpushServerService --> WebpushServerController : 204 No Content or Error
+}
+
+package "Webpush Clients" as WebpushClients {
+    package "Webpush Client 1" as WebpushClient1 {
+        class WebpushClient1Controller {
+            + GET /health: string
+        }
+
+        ' class WebpushClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebpushClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Register Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Register Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 201 Created or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 201 Created or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Send Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Send Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Receive Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Receive Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Disconnect Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Disconnect Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 204 No Content or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 204 No Content or Error
+    }
+
+    package "Webpush Client 2" as WebpushClient2 {
+        class WebpushClient2Controller {
+            + GET /health: string
+        }
+
+        ' class WebpushClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebpushClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Register Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Register Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 201 Created or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 201 Created or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Send Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Send Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Receive Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Receive Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Disconnect Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Disconnect Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 204 No Content or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 204 No Content or Error
+    }
+
+    package "Webpush Client 3" as WebpushClient3 {
+        class WebpushClient3Controller {
+            + GET /health: string
+        }
+
+        ' class WebpushClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebpushClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Register Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Register Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 201 Created or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 201 Created or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Send Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Send Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Receive Payload
+        ' WebpushClient1Service --> WebpushClient1Repository : Receive Payload
+        ' WebpushClient1Repository --> WebpushClient1Service : 200 OK or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 200 OK or Error
+
+        ' WebpushClient1Controller --> WebpushClient1Service : Disconnect Webpush
+        ' WebpushClient1Service --> WebpushClient1Repository : Disconnect Webpush
+        ' WebpushClient1Repository --> WebpushClient1Service : 204 No Content or Error
+        ' WebpushClient1Service --> WebpushClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: WebpushPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> WebpushServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackWebpushPerformance(webpushId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logWebpushEvent(eventData: WebpushEvent): void
+'     }
+
+'     ' MonitoringService --> WebpushServer : trackWebpushPerformance()
+'     ' LoggingService --> WebpushServer : logWebpushEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: WebpushEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> WebpushServer : trackEvent()
+' }
+
+WebpushClient1 --> WebpushServer : POST /webpushs
+WebpushClient2 --> WebpushServer : POST /webpushs
+WebpushClient3 --> WebpushServer : POST /webpushs
+
+WebpushServer --> WebpushClient1 : 201 Created or Error
+WebpushServer --> WebpushClient2 : 201 Created or Error
+WebpushServer --> WebpushClient3 : 201 Created or Error
+
+WebpushClient1 --> WebpushServer : POST /webpushs/{webpush_id}/payloads
+WebpushClient2 --> WebpushServer : POST /webpushs/{webpush_id}/payloads
+WebpushClient3 --> WebpushServer : POST /webpushs/{webpush_id}/payloads
+
+WebpushServer --> WebpushClient1 : Deliver Payload
+WebpushServer --> WebpushClient2 : Deliver Payload
+WebpushServer --> WebpushClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> WebpushServer : Track Webpush Performance
+' LoggingService --> WebpushServer : Log Webpush Event
+' EventTrackingService --> WebpushServer : Track Event
+
+@enduml

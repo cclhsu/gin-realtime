@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    app: zookeeper
+    kompose.service.type: NodePort
+  creationTimestamp: null
+  labels:
+    io.kompose.service: zookeeper
+  name: zookeeper
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: zookeeper
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        app: zookeeper
+        kompose.service.type: NodePort
+      creationTimestamp: null
+      labels:
+        io.kompose.network/docker-compose-my-network: "true"
+        io.kompose.service: zookeeper
+    spec:
+      containers:
+        - image: confluentinc/cp-zookeeper:latest
+          name: zookeeper
+          ports:
+            - containerPort: 2181
+              hostPort: 2181
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/zookeeper/data
+              name: zookeeper-data
+      restartPolicy: Always
+      volumes:
+        - name: zookeeper-data
+          persistentVolumeClaim:
+            claimName: zookeeper-data
+status: {}

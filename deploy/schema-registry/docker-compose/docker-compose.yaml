@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  my-network:
+    # driver: bridge
+
+services:
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    pull_policy: always
+    container_name: schema-registry
+    restart: unless-stopped
+    environment:
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL='zookeeper:2181'
+      - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka:9092,PLAINTEXT_INTERNAL://localhost:29092
+      - SCHEMA_REGISTRY_DEBUG='true'
+    ports:
+      - '8081:8081'
+    volumes:
+      - schema-registry_data:/var/lib/schema-registry/data
+    networks:
+      - my-network
+    labels:
+      app: schema-registry
+      kompose.service.type: 'NodePort'
+
+volumes:
+  schema-registry_data:
+    driver: local

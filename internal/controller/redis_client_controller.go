@@ -12,7 +12,7 @@ import (
 type RedisClientControllerInterface interface {
 	Connect(c *gin.Context)
 	Disconnect(c *gin.Context)
-	Trigger(c *gin.Context)
+	Send(c *gin.Context)
 	// Echo(c *gin.Context)
 	// Broadcast(c *gin.Context)
 	Health(c *gin.Context)
@@ -32,30 +32,30 @@ func NewRedisClientController(ctx context.Context, logger *logrus.Logger, redisC
 	}
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/redis/health' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/redis-client/health' | jq
 // @Summary redis client health
 // @Description redis client health
-// @Tags redis
+// @Tags redis-client
 // @Accept json
 // @Produce json
 // @Success 200 {object} string "OK"
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /redis/health [get]
+// @Router /redis-client/health [get]
 func (wcc *RedisClientController) Health(ginContext *gin.Context) {
 	wcc.logger.Info("RedisClientController HealthHandler")
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": wcc.redisClientService.Health(),
 	})
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/redis/trigger?message=hello' | jq
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/redis/trigger' -d '{"message":"hello"}' | jq
-// @Summary redis client trigger message
-// @Description redis client trigger message
-// @Tags redis
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/redis-client/send?message=hello' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/redis-client/send' -d '{"message":"hello"}' | jq
+// @Summary redis client send message
+// @Description redis client send message
+// @Tags redis-client
 // @Accept json
 // @Produce json
 // @Param message query string true "message"
@@ -63,12 +63,12 @@ func (wcc *RedisClientController) Health(ginContext *gin.Context) {
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /redis/trigger [get]
-func (wcc *RedisClientController) Trigger(ginContext *gin.Context) {
-	wcc.logger.Info("RedisClientController TriggerHandler")
+// @Router /redis-client/send [get]
+func (wcc *RedisClientController) Send(ginContext *gin.Context) {
+	wcc.logger.Info("RedisClientController SendHandler")
 
 	message := ginContext.Query("message")
-	message, err := wcc.redisClientService.Trigger(message)
+	message, err := wcc.redisClientService.Send(message)
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -76,17 +76,17 @@ func (wcc *RedisClientController) Trigger(ginContext *gin.Context) {
 
 	// var data model.RedisMessageDTO
 	// if err := ginContext.ShouldBindJSON(&webhookData); err != nil {
-	// 	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	// message, err  := wcc.redisClientService.Trigger(data)
+	// message, err	 := wcc.redisClientService.Send(data)
 	// if err != nil {
-	// 	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": message,
 	})
 }

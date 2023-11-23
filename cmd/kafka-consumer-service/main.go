@@ -29,8 +29,9 @@ var (
 	endpoint string
 	router	 *gin.Engine
 
-	helloService  *service.HelloService
-	healthService *service.HealthService
+	helloService	   *service.HelloService
+	healthService	   *service.HealthService
+	kafkaClientService *service.KafkaClientService
 )
 
 // CallerPrettyfier is a function that formats the caller information.
@@ -107,8 +108,8 @@ func startGinServer() {
 	// Set up Gin server
 	router := gin.Default()
 
-	route.SetupRestfulKafkaClientRoutes(ctx, router, host, port, logger, helloService, healthService)
-	// route.SetupGraphQLRoutes(ctx, router, host, port, logger, authService, userService, teamService, helloService, healthService)
+	route.SetupRestfulKafkaClientRoutes(ctx, router, host, port, logger, helloService, healthService, kafkaClientService)
+	// route.SetupGraphQLRoutes(ctx, router, host, port, logger, authService, userService, teamService, helloService, healthService, kafkaClientService)
 
 	// // Add redis client to gin context
 	// router.Use(func(c *gin.Context) {
@@ -148,6 +149,9 @@ func main() {
 
 	// Create the health check service
 	healthService = service.NewHealthService(ctx, logger)
+
+	// Create the kafka client service
+	kafkaClientService = service.NewKafkaClientService(ctx, logger)
 
 	// Start Gin server in a goroutine
 	go startGinServer()

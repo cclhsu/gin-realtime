@@ -1,0 +1,43 @@
+version: '3'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    # pull_policy: always
+    container_name: kafka
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_DELETE_TOPIC_ENABLE=true
+      - KAFKA_CREATE_TOPICS='test:1:1,logstash_logs:1:1,raw_logs:1:1,tasks:1:1'
+    ports:
+      - '9092:9092'
+      - '9101:9101'
+      - '29092:29092'
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - my-network
+    labels:
+      app: kafka
+      kompose.service.type: 'NodePort'
+    # depends_on:
+    #   - zookeeper
+
+volumes:
+  kafka_data:
+    driver: local

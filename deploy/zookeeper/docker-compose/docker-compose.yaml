@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  my-network:
+    driver: bridge
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    pull_policy: always
+    container_name: zookeeper
+    restart: unless-stopped
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    ports:
+      - '2181:2181'
+      # - '2888:2888'
+      # - '3888:3888'
+      # - '8080:8080'
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+    networks:
+      - my-network
+    labels:
+      app: zookeeper
+      kompose.service.type: 'NodePort'
+
+volumes:
+  zookeeper_data:
+    driver: local

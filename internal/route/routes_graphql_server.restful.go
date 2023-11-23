@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulGraphQLServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulGraphQLServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, graphQLServerService *service.GraphQLServerService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	graphQLServerController := controller.NewGraphQLServerController(ctx, logger, graphQLServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -62,7 +63,7 @@ func SetupRestfulGraphQLServerRoutes(ctx context.Context, r *gin.Engine, host st
 	docGroup := r.Group("/doc")
 	{
 		// openapiDocs.SwaggerInfo.BasePath = "/"
-		// openapiDocs.SwaggerInfographql_server_service.BasePath = "/"
+		// openapiDocs.SwaggerInfographQL_server_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -80,5 +81,16 @@ func SetupRestfulGraphQLServerRoutes(ctx context.Context, r *gin.Engine, host st
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	graphQLGroup := r.Group("/graphQL")
+	{
+		// Get graphQL handler
+		graphQLGroup.GET("/handler", graphQLServerController.GraphQLHandler)
+		// graphQLGroup.GET("/echo", graphQLServerController.GraphQLEchoHandler)
+		// graphQLGroup.GET("/broadcast", graphQLServerController.GraphQLBroadcastHandler)
+		// graphQLGroup.GET("/event", graphQLServerController.GraphQLEventHandler)
+		// graphQLGroup.GET("/message", graphQLServerController.GraphQLMessageHandler)
+		// graphQLGroup.GET("/health", graphQLServerController.GraphQL HealthHandler)
 	}
 }

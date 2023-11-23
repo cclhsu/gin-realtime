@@ -1,0 +1,17 @@
+@startuml SocketIOSequenceDiagram
+
+actor Client
+participant Server as "Socket.IO Server"
+
+Client -> Server: Establish Connection
+Server --> Client: Connection Acknowledgment
+
+Client -> Server: Send Message
+Server --> Client: Receive Message
+
+Server -> Client: Send Message
+Client --> Server: Receive Message
+
+Client -> Server: Disconnect
+
+@enduml

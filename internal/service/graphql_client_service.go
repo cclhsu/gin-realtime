@@ -10,10 +10,10 @@ import (
 
 type GraphQLClientInterface interface {
 	NewGraphQLClientService(ctx context.Context, logger *logrus.Logger) *GraphQLClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewGraphQLClientService(ctx context.Context, logger *logrus.Logger) *GraphQ
 	}
 }
 
-func (gcs *GraphQLClientService) Initialize() {
+func (gcs *GraphQLClientService) Initialize() error {
 	gcs.logger.Info("graphQLClientService Initialize")
 	gcs.graphQLServerServiceURL = gcs.initializeGraphQLServerURL()
 	gcs.logger.Infof("GraphQL Server URL: %s\n", gcs.graphQLServerServiceURL)
+	return nil
 }
 
 func (gcs *GraphQLClientService) initializeGraphQLServerURL() string {
@@ -47,7 +48,7 @@ func (gcs *GraphQLClientService) initializeGraphQLServerURL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/graphql/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (gcs *GraphQLClientService) Connection() error {
@@ -60,8 +61,8 @@ func (gcs *GraphQLClientService) Disconnection() error {
 	return nil
 }
 
-func (gcs *GraphQLClientService) Trigger(message string) (string, error) {
-	gcs.logger.Info("graphQLClientService Trigger")
+func (gcs *GraphQLClientService) Send(message string) (string, error) {
+	gcs.logger.Info("graphQLClientService Send")
 	return "", nil
 }
 

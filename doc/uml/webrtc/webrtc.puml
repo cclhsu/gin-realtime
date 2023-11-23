@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class WebrtcServer
+' class WebrtcClient
+
+' User --> Service : Register Webrtc
+' Service --> WebrtcServer : POST /webrtcs
+' WebrtcServer --> Service : 201 Created or Error
+' Service --> WebrtcServer : POST /webrtcs/{webrtc_id}/payloads
+' WebrtcServer --> Service : Deliver Payload
+' User --> Service : Disconnect Webrtc
+' Service --> WebrtcServer : DELETE /webrtcs/{webrtc_id}
+' WebrtcServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Webrtc Server" as WebrtcServer {
+    class WebrtcServerController {
+        + GET /health: string
+    }
+
+    ' class WebrtcServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class WebrtcServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' WebrtcServerController --> WebrtcServerService : Register Webrtc
+    ' WebrtcServerService --> WebrtcServerRepository : Register Webrtc
+    ' WebrtcServerRepository --> WebrtcServerService : 201 Created or Error
+    ' WebrtcServerService --> WebrtcServerController : 201 Created or Error
+
+    ' WebrtcServerController --> WebrtcServerService : Deliver Payload
+    ' WebrtcServerService --> WebrtcServerRepository : Deliver Payload
+    ' WebrtcServerRepository --> WebrtcServerService : 200 OK or Error
+    ' WebrtcServerService --> WebrtcServerController : 200 OK or Error
+
+    ' WebrtcServerController --> WebrtcServerService : Disconnect Webrtc
+    ' WebrtcServerService --> WebrtcServerRepository : Disconnect Webrtc
+    ' WebrtcServerRepository --> WebrtcServerService : 204 No Content or Error
+    ' WebrtcServerService --> WebrtcServerController : 204 No Content or Error
+}
+
+package "Webrtc Clients" as WebrtcClients {
+    package "Webrtc Client 1" as WebrtcClient1 {
+        class WebrtcClient1Controller {
+            + GET /health: string
+        }
+
+        ' class WebrtcClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebrtcClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Register Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Register Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 201 Created or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 201 Created or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Send Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Send Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Receive Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Receive Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Disconnect Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Disconnect Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 204 No Content or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 204 No Content or Error
+    }
+
+    package "Webrtc Client 2" as WebrtcClient2 {
+        class WebrtcClient2Controller {
+            + GET /health: string
+        }
+
+        ' class WebrtcClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebrtcClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Register Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Register Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 201 Created or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 201 Created or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Send Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Send Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Receive Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Receive Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Disconnect Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Disconnect Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 204 No Content or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 204 No Content or Error
+    }
+
+    package "Webrtc Client 3" as WebrtcClient3 {
+        class WebrtcClient3Controller {
+            + GET /health: string
+        }
+
+        ' class WebrtcClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebrtcClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Register Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Register Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 201 Created or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 201 Created or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Send Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Send Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Receive Payload
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Receive Payload
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 200 OK or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 200 OK or Error
+
+        ' WebrtcClient1Controller --> WebrtcClient1Service : Disconnect Webrtc
+        ' WebrtcClient1Service --> WebrtcClient1Repository : Disconnect Webrtc
+        ' WebrtcClient1Repository --> WebrtcClient1Service : 204 No Content or Error
+        ' WebrtcClient1Service --> WebrtcClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: WebrtcPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> WebrtcServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackWebrtcPerformance(webrtcId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logWebrtcEvent(eventData: WebrtcEvent): void
+'     }
+
+'     ' MonitoringService --> WebrtcServer : trackWebrtcPerformance()
+'     ' LoggingService --> WebrtcServer : logWebrtcEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: WebrtcEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> WebrtcServer : trackEvent()
+' }
+
+WebrtcClient1 --> WebrtcServer : POST /webrtcs
+WebrtcClient2 --> WebrtcServer : POST /webrtcs
+WebrtcClient3 --> WebrtcServer : POST /webrtcs
+
+WebrtcServer --> WebrtcClient1 : 201 Created or Error
+WebrtcServer --> WebrtcClient2 : 201 Created or Error
+WebrtcServer --> WebrtcClient3 : 201 Created or Error
+
+WebrtcClient1 --> WebrtcServer : POST /webrtcs/{webrtc_id}/payloads
+WebrtcClient2 --> WebrtcServer : POST /webrtcs/{webrtc_id}/payloads
+WebrtcClient3 --> WebrtcServer : POST /webrtcs/{webrtc_id}/payloads
+
+WebrtcServer --> WebrtcClient1 : Deliver Payload
+WebrtcServer --> WebrtcClient2 : Deliver Payload
+WebrtcServer --> WebrtcClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> WebrtcServer : Track Webrtc Performance
+' LoggingService --> WebrtcServer : Log Webrtc Event
+' EventTrackingService --> WebrtcServer : Track Event
+
+@enduml

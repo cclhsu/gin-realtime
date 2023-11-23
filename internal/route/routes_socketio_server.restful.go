@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulSocketIOServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulSocketIOServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, socketIOServerService *service.SocketIOServerService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	socketIOServerController := controller.NewSocketIOServerController(ctx, logger, socketIOServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -62,7 +63,7 @@ func SetupRestfulSocketIOServerRoutes(ctx context.Context, r *gin.Engine, host s
 	docGroup := r.Group("/doc")
 	{
 		// openapiDocs.SwaggerInfo.BasePath = "/"
-		// openapiDocs.SwaggerInfosocketio_server_service.BasePath = "/"
+		// openapiDocs.SwaggerInfosocketIO_server_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -80,5 +81,16 @@ func SetupRestfulSocketIOServerRoutes(ctx context.Context, r *gin.Engine, host s
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	socketIOGroup := r.Group("/socket-io")
+	{
+		// Get socketIO handler
+		socketIOGroup.GET("/handler", socketIOServerController.SocketIOHandler)
+		// socketIOGroup.GET("/echo", socketIOServerController.SocketIOEchoHandler)
+		// socketIOGroup.GET("/broadcast", socketIOServerController.SocketIOBroadcastHandler)
+		// socketIOGroup.GET("/event", socketIOServerController.SocketIOEventHandler)
+		// socketIOGroup.GET("/message", socketIOServerController.SocketIOMessageHandler)
+		// socketIOGroup.GET("/health", socketIOServerController.SocketIO HealthHandler)
 	}
 }

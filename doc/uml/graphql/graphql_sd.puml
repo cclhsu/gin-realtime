@@ -1,0 +1,20 @@
+@startuml GraphQLSequenceDiagram
+
+actor User
+participant Client as "GraphQL Client"
+participant Server as "GraphQL Server"
+
+User -> Client: Send GraphQL Query/Mutation
+Client -> Server: HTTP POST Request with Query/Mutation
+Server --> Client: Process and Validate Request
+Server --> Client: Execute Query/Mutation
+Server --> Client: Retrieve Data
+Client --> User: Receive Response Data
+User -> Client: Send GraphQL Query/Mutation
+Client -> Server: HTTP POST Request with Query/Mutation
+Server --> Client: Process and Validate Request
+Server --> Client: Execute Query/Mutation
+Server --> Client: Retrieve Data
+Client --> User: Receive Response Data
+
+@enduml

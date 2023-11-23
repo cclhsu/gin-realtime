@@ -5,78 +5,342 @@ definitions:
       message:
         type: string
     type: object
-  model.EventDataDTO:
-    properties:
-      data: {}
-      id:
-        type: string
-      type:
-        type: string
-    type: object
-  model.EventDataResponseDTO:
-    properties:
-      data: {}
-      message:
-        type: string
-      success:
-        type: boolean
-    type: object
   model.HelloJsonResponse:
     properties:
       data:
         $ref: '#/definitions/model.Data'
     type: object
-  model.WebhookConfigDTO:
+  model.MessageDTO:
     properties:
-      isActive:
-        type: boolean
-      secret:
+      UUID:
         type: string
+      action:
+        $ref: '#/definitions/types.ACTION_TYPES'
+      data:
+        additionalProperties: true
+        description: Timestamp     time.Time               `json:"timestamp"`
+        type: object
+      environment:
+        $ref: '#/definitions/types.ENVIRONMENT_TYPES'
+      metadata:
+        additionalProperties: true
+        type: object
+      recipient:
+        type: string
+      recipientType:
+        $ref: '#/definitions/types.RECIPIENT_TYPES'
+      recipients:
+        items:
+          type: string
+        type: array
+      sender:
+        type: string
+      stage:
+        $ref: '#/definitions/types.STAGE_TYPES'
       type:
-        $ref: '#/definitions/model.WebhookType'
+        $ref: '#/definitions/types.MESSAGE_TYPES'
     type: object
-  model.WebhookInfoDTO:
+  model.MessageResponseDTO:
     properties:
-      config:
-        $ref: '#/definitions/model.WebhookConfigDTO'
-      expiryDate:
-        type: string
-      id:
-        type: string
-      url:
-        type: string
-    type: object
-  model.WebhookRegistrationResponseDTO:
-    properties:
-      data: {}
+      code:
+        type: integer
+      data:
+        additionalProperties: true
+        type: object
       message:
         type: string
-      success:
-        type: boolean
+      status:
+        type: string
     type: object
-  model.WebhookType:
+  model.RegistrationDTO:
+    properties:
+      UUID:
+        type: string
+      callbackURL:
+        description: Timestamp     time.Time                 `json:"timestamp"`
+        type: string
+      environment:
+        $ref: '#/definitions/types.ENVIRONMENT_TYPES'
+      secret:
+        description: Expires       time.Time                 `json:"expires"`
+        type: string
+      sender:
+        type: string
+      stage:
+        $ref: '#/definitions/types.STAGE_TYPES'
+      state:
+        $ref: '#/definitions/types.GENERAL_STATE_TYPES'
+      subscriptions:
+        items:
+          type: string
+        type: array
+      type:
+        $ref: '#/definitions/types.MESSAGE_TYPES'
+    type: object
+  model.RegistrationResponseDTO:
+    properties:
+      code:
+        type: integer
+      data:
+        additionalProperties: true
+        type: object
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  types.ACTION_TYPES:
     enum:
-    - test
-    - dev
-    - prod
-    - broadcast
-    - system
-    - exclusive
-    type: string
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    type: integer
     x-enum-varnames:
-    - Test
-    - Dev
-    - Prod
-    - Broadcast
-    - System
-    - Exclusive
+    - ACTION_TYPES_UNSPECIFIED
+    - ACTION_TYPES_LIST
+    - ACTION_TYPES_GET
+    - ACTION_TYPES_CREATE
+    - ACTION_TYPES_UPDATE
+    - ACTION_TYPES_DELETE
+    - ACTION_TYPES_INIT
+    - ACTION_TYPES_REQUIRED
+    - ACTION_TYPES_OPTIONAL
+    - ACTION_TYPES_CONNECT
+    - ACTION_TYPES_DISCONNECT
+    - ACTION_TYPES_REGISTER
+    - ACTION_TYPES_UNREGISTER
+    - ACTION_TYPES_SUBSCRIBE
+    - ACTION_TYPES_UNSUBSCRIBE
+    - ACTION_TYPES_UNRECOGNIZED
+  types.ENVIRONMENT_TYPES:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    type: integer
+    x-enum-varnames:
+    - ENVIRONMENT_TYPES_UNSPECIFIED
+    - ENVIRONMENT_TYPES_LOCAL
+    - ENVIRONMENT_TYPES_REMOTE
+    - ENVIRONMENT_TYPES_DOCKER
+    - ENVIRONMENT_TYPES_KUBERNETES
+    - ENVIRONMENT_TYPES_UNRECOGNIZED
+  types.GENERAL_STATE_TYPES:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+    - 21
+    type: integer
+    x-enum-varnames:
+    - GENERAL_STATE_TYPES_UNSPECIFIED
+    - GENERAL_STATE_TYPES_DISABLED
+    - GENERAL_STATE_TYPES_ENABLED
+    - GENERAL_STATE_TYPES_INACTIVE
+    - GENERAL_STATE_TYPES_ACTIVE
+    - GENERAL_STATE_TYPES_DISCONNECTED
+    - GENERAL_STATE_TYPES_CONNECTED
+    - GENERAL_STATE_TYPES_UNREGISTERED
+    - GENERAL_STATE_TYPES_REGISTERED
+    - GENERAL_STATE_TYPES_UNSUBSCRIBED
+    - GENERAL_STATE_TYPES_SUBSCRIBED
+    - GENERAL_STATE_TYPES_UNAUTHORIZED
+    - GENERAL_STATE_TYPES_AUTHORIZED
+    - GENERAL_STATE_TYPES_UNCONFIRMED
+    - GENERAL_STATE_TYPES_CONFIRMED
+    - GENERAL_STATE_TYPES_UNVERIFIED
+    - GENERAL_STATE_TYPES_VERIFIED
+    - GENERAL_STATE_TYPES_UNAPPROVED
+    - GENERAL_STATE_TYPES_APPROVED
+    - GENERAL_STATE_TYPES_UNFINISHED
+    - GENERAL_STATE_TYPES_FINISHED
+    - GENERAL_STATE_TYPES_UNRECOGNIZED
+  types.MESSAGE_TYPES:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
+    - 10
+    - 11
+    type: integer
+    x-enum-varnames:
+    - MESSAGE_TYPES_UNSPECIFIED
+    - MESSAGE_TYPES_UNICAST
+    - MESSAGE_TYPES_BROADCAST
+    - MESSAGE_TYPES_ECHO
+    - MESSAGE_TYPES_HEALTH
+    - MESSAGE_TYPES_TASK
+    - MESSAGE_TYPES_CONNECTION
+    - MESSAGE_TYPES_SUBSCRIPTION
+    - MESSAGE_TYPES_REGISTRATION
+    - MESSAGE_TYPES_SYSTEM
+    - MESSAGE_TYPES_EVENT
+    - MESSAGE_TYPES_UNRECOGNIZED
+  types.RECIPIENT_TYPES:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    type: integer
+    x-enum-varnames:
+    - RECIPIENT_TYPES_UNSPECIFIED
+    - RECIPIENT_TYPES_SERVER
+    - RECIPIENT_TYPES_CLIENT
+    - RECIPIENT_TYPES_INDIVIDUAL
+    - RECIPIENT_TYPES_GROUP
+    - RECIPIENT_TYPES_UNRECOGNIZED
+  types.STAGE_TYPES:
+    enum:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    type: integer
+    x-enum-varnames:
+    - STAGE_TYPES_UNSPECIFIED
+    - STAGE_TYPES_DEVELOPMENT
+    - STAGE_TYPES_STAGING
+    - STAGE_TYPES_PRODUCTION
+    - STAGE_TYPES_UNRECOGNIZED
 info:
   contact: {}
   description: This is a sample API server using Gin and Swagger.
   title: My API
   version: "1.0"
 paths:
-  /graphql/health:
+  /elasticsearch-client/health:
+    get:
+      consumes:
+      - application/json
+      description: elasticsearch client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: elasticsearch client health
+      tags:
+      - elasticsearch-client
+  /elasticsearch-client/send:
+    get:
+      consumes:
+      - application/json
+      description: elasticsearch client send message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: elasticsearch client send message
+      tags:
+      - elasticsearch-client
+  /elasticsearch/handler:
+    get:
+      consumes:
+      - application/json
+      description: elasticsearch handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: elasticsearch handler
+      tags:
+      - elasticsearch
+  /graphql-client/health:
     get:
       consumes:
       - application/json
@@ -102,12 +366,12 @@ paths:
             type: string
       summary: graphql client health
       tags:
-      - graphql
-  /graphql/trigger:
+      - graphql-client
+  /graphql-client/send:
     get:
       consumes:
       - application/json
-      description: graphql client trigger message
+      description: graphql client send message
       parameters:
       - description: message
         in: query
@@ -133,10 +397,37 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: graphql client trigger message
+      summary: graphql client send message
+      tags:
+      - graphql-client
+  /graphql/handler:
+    get:
+      consumes:
+      - application/json
+      description: graphql handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: graphql handler
       tags:
       - graphql
-  /grpc/health:
+  /grpc-client/health:
     get:
       consumes:
       - application/json
@@ -162,12 +453,12 @@ paths:
             type: string
       summary: grpc client health
       tags:
-      - grpc
-  /grpc/trigger:
+      - grpc-client
+  /grpc-client/send:
     get:
       consumes:
       - application/json
-      description: grpc client trigger message
+      description: grpc client send message
       parameters:
       - description: message
         in: query
@@ -193,7 +484,34 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: grpc client trigger message
+      summary: grpc client send message
+      tags:
+      - grpc-client
+  /grpc/handler:
+    get:
+      consumes:
+      - application/json
+      description: grpc handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: grpc handler
       tags:
       - grpc
   /health/healthy:
@@ -352,7 +670,7 @@ paths:
       summary: get hello world string
       tags:
       - hello
-  /kafka/health:
+  /kafka-client/health:
     get:
       consumes:
       - application/json
@@ -378,12 +696,12 @@ paths:
             type: string
       summary: kafka client health
       tags:
-      - kafka
-  /kafka/trigger:
+      - kafka-client
+  /kafka-client/send:
     get:
       consumes:
       - application/json
-      description: kafka client trigger message
+      description: kafka client send message
       parameters:
       - description: message
         in: query
@@ -409,10 +727,37 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: kafka client trigger message
+      summary: kafka client send message
+      tags:
+      - kafka-client
+  /kafka/handler:
+    get:
+      consumes:
+      - application/json
+      description: kafka handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: kafka handler
       tags:
       - kafka
-  /redis/health:
+  /redis-client/health:
     get:
       consumes:
       - application/json
@@ -438,12 +783,12 @@ paths:
             type: string
       summary: redis client health
       tags:
-      - redis
-  /redis/trigger:
+      - redis-client
+  /redis-client/send:
     get:
       consumes:
       - application/json
-      description: redis client trigger message
+      description: redis client send message
       parameters:
       - description: message
         in: query
@@ -469,14 +814,14 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: redis client trigger message
+      summary: redis client send message
       tags:
-      - redis
-  /serversentevent/health:
+      - redis-client
+  /redis/handler:
     get:
       consumes:
       - application/json
-      description: serversentevent client health
+      description: redis handler
       produces:
       - application/json
       responses:
@@ -496,14 +841,41 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: serversentevent client health
+      summary: redis handler
       tags:
-      - serversentevent
-  /serversentevent/trigger:
+      - redis
+  /server-sent-event-client/health:
     get:
       consumes:
       - application/json
-      description: serversentevent client trigger message
+      description: server-sent-event client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: server-sent-event client health
+      tags:
+      - server-sent-event-client
+  /server-sent-event-client/send:
+    get:
+      consumes:
+      - application/json
+      description: server-sent-event client send message
       parameters:
       - description: message
         in: query
@@ -529,18 +901,72 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: serversentevent client trigger message
+      summary: server-sent-event client send message
       tags:
-      - serversentevent
-  /webhook-client/disconnect/{webhookId}:
-    put:
+      - server-sent-event-client
+  /server-sent-event/handler:
+    get:
       consumes:
       - application/json
-      description: disconnect webhook
+      description: server-sent-event handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: server-sent-event handler
+      tags:
+      - server-sent-event
+  /socket-io-client/health:
+    get:
+      consumes:
+      - application/json
+      description: socketIO client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: socketIO client health
+      tags:
+      - socket-io-client
+  /socket-io-client/send:
+    get:
+      consumes:
+      - application/json
+      description: socketIO client send message
       parameters:
-      - description: Webhook ID
-        in: path
-        name: webhookId
+      - description: message
+        in: query
+        name: message
         required: true
         type: string
       produces:
@@ -549,7 +975,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+            type: string
         "400":
           description: Invalid request
           schema:
@@ -562,28 +988,21 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: disconnect webhook
+      summary: socketIO client send message
       tags:
-      - webhook-client
-  /webhook-client/handle-payload:
-    post:
+      - socket-io-client
+  /socket-io/handler:
+    get:
       consumes:
       - application/json
-      description: handle triggered event
-      parameters:
-      - description: Event Data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.EventDataDTO'
+      description: socketio handler
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.EventDataResponseDTO'
+            type: string
         "400":
           description: Invalid request
           schema:
@@ -596,153 +1015,14 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: handle triggered event
+      summary: socketio handler
       tags:
-      - webhook-client
-  /webhook-client/register:
-    post:
+      - socketio
+  /webhook-client/message:
+    get:
       consumes:
       - application/json
-      description: register webhook
-      parameters:
-      - description: Webhook Info
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.WebhookInfoDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: register webhook
-      tags:
-      - webhook-client
-  /webhook-client/trigger-event:
-    post:
-      consumes:
-      - application/json
-      description: trigger event
-      parameters:
-      - description: Event Data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.EventDataDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.EventDataResponseDTO'
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: trigger event
-      tags:
-      - webhook-client
-  /webhook/{webhookId}:
-    delete:
-      consumes:
-      - application/json
-      description: unregister webhook
-      parameters:
-      - description: Webhook ID
-        in: path
-        name: webhookId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: unregister webhook
-      tags:
-      - webhook
-    put:
-      consumes:
-      - application/json
-      description: update webhook
-      parameters:
-      - description: Webhook ID
-        in: path
-        name: webhookId
-        required: true
-        type: string
-      - description: Webhook Info
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/model.WebhookInfoDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: update webhook
-      tags:
-      - webhook
-  /webhook/handle-event:
-    post:
-      consumes:
-      - application/json
-      description: list registered webhooks
+      description: List messages
       produces:
       - application/json
       responses:
@@ -750,7 +1030,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.WebhookInfoDTO'
+              $ref: '#/definitions/model.MessageDTO'
             type: array
         "400":
           description: Invalid request
@@ -764,14 +1044,176 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: list registered webhooks
+      summary: List messages
       tags:
-      - webhook
-  /webhook/list:
+      - webhook-client
+  /webhook-client/message/receive:
+    post:
+      consumes:
+      - application/json
+      description: Receive message
+      parameters:
+      - description: Message Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.MessageDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Receive message
+      tags:
+      - webhook-client
+  /webhook-client/message/send:
+    post:
+      consumes:
+      - application/json
+      description: Send message
+      parameters:
+      - description: Message Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.MessageDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Send message
+      tags:
+      - webhook-client
+  /webhook-client/register:
     get:
       consumes:
       - application/json
-      description: update webhook
+      description: list webhook registrations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.RegistrationDTO'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: list webhook registrations
+      tags:
+      - webhook-client
+    post:
+      consumes:
+      - application/json
+      description: Register webhook
+      parameters:
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegistrationDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register webhook
+      tags:
+      - webhook-client
+  /webhook-client/register/{webhookId}:
+    delete:
+      consumes:
+      - application/json
+      description: Unregister webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Unregister webhook
+      tags:
+      - webhook-client
+    put:
+      consumes:
+      - application/json
+      description: Update webhook registration
       parameters:
       - description: Webhook ID
         in: path
@@ -783,14 +1225,14 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/model.WebhookInfoDTO'
+          $ref: '#/definitions/model.RegistrationDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+            $ref: '#/definitions/model.RegistrationResponseDTO'
         "400":
           description: Invalid request
           schema:
@@ -803,28 +1245,153 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: update webhook
+      summary: Update webhook registration
+      tags:
+      - webhook-client
+  /webhook/message:
+    get:
+      consumes:
+      - application/json
+      description: List messages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.MessageDTO'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List messages
       tags:
       - webhook
-  /webhook/register:
+  /webhook/message/receive:
     post:
       consumes:
       - application/json
-      description: register webhook
+      description: Receive message
+      parameters:
+      - description: Message Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.MessageDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Receive message
+      tags:
+      - webhook
+  /webhook/message/send:
+    post:
+      consumes:
+      - application/json
+      description: Send message
+      parameters:
+      - description: Message Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.MessageDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.MessageResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Send message
+      tags:
+      - webhook
+  /webhook/register:
+    get:
+      consumes:
+      - application/json
+      description: List registered webhooks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.RegistrationDTO'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: List registered webhooks
+      tags:
+      - webhook
+    post:
+      consumes:
+      - application/json
+      description: Register webhook
       parameters:
       - description: Webhook Info
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/model.WebhookInfoDTO'
+          $ref: '#/definitions/model.RegistrationDTO'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.WebhookRegistrationResponseDTO'
+            $ref: '#/definitions/model.RegistrationResponseDTO'
         "400":
           description: Invalid request
           schema:
@@ -837,10 +1404,81 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: register webhook
+      summary: Register webhook
       tags:
       - webhook
-  /webpush/health:
+  /webhook/register/{webhookId}:
+    delete:
+      consumes:
+      - application/json
+      description: Unregister webhook
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Unregister webhook
+      tags:
+      - webhook
+    put:
+      consumes:
+      - application/json
+      description: Update webhook registration
+      parameters:
+      - description: Webhook ID
+        in: path
+        name: webhookId
+        required: true
+        type: string
+      - description: Webhook Info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegistrationDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RegistrationResponseDTO'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update webhook registration
+      tags:
+      - webhook
+  /webpush-client/health:
     get:
       consumes:
       - application/json
@@ -866,12 +1504,12 @@ paths:
             type: string
       summary: webpush client health
       tags:
-      - webpush
-  /webpush/trigger:
+      - webpush-client
+  /webpush-client/send:
     get:
       consumes:
       - application/json
-      description: webpush client trigger message
+      description: webpush client send message
       parameters:
       - description: message
         in: query
@@ -897,10 +1535,124 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: webpush client trigger message
+      summary: webpush client send message
+      tags:
+      - webpush-client
+  /webpush/handler:
+    get:
+      consumes:
+      - application/json
+      description: webpush handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webpush handler
       tags:
       - webpush
-  /websocket/health:
+  /webrtc-client/health:
+    get:
+      consumes:
+      - application/json
+      description: webrtc client health
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webrtc client health
+      tags:
+      - webrtc-client
+  /webrtc-client/send:
+    get:
+      consumes:
+      - application/json
+      description: webrtc client send message
+      parameters:
+      - description: message
+        in: query
+        name: message
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webrtc client send message
+      tags:
+      - webrtc-client
+  /webrtc/handler:
+    get:
+      consumes:
+      - application/json
+      description: webrtc handler
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: webrtc handler
+      tags:
+      - webrtc
+  /websocket-client/health:
     get:
       consumes:
       - application/json
@@ -926,12 +1678,66 @@ paths:
             type: string
       summary: websocket client health
       tags:
-      - websocket
-  /websocket/trigger:
+      - websocket-client
+  /websocket-client/message:
     get:
       consumes:
       - application/json
-      description: websocket client trigger message
+      description: websocket client list messages
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: websocket client list messages
+      tags:
+      - websocket-client
+  /websocket-client/message/receive:
+    post:
+      consumes:
+      - application/json
+      description: websocket client receive message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: websocket client receive message
+      tags:
+      - websocket-client
+  /websocket-client/send:
+    post:
+      consumes:
+      - application/json
+      description: websocket client send message
       parameters:
       - description: message
         in: query
@@ -957,10 +1763,10 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: websocket client trigger message
+      summary: websocket client send message
       tags:
-      - websocket
-  /ws:
+      - websocket-client
+  /websocket/ws:
     get:
       consumes:
       - application/json

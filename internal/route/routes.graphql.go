@@ -18,7 +18,7 @@ package route
 //	ginSwagger "github.com/swaggo/gin-swagger"
 // )
 
-// // Defining the Graphql handler
+// // Defining the GraphQL handler
 // func graphqlHandler(resolver graph.Resolver) gin.HandlerFunc {
 //	// NewExecutableSchema and Config are in the generated.go file
 //	// Resolver is in the resolver.go file

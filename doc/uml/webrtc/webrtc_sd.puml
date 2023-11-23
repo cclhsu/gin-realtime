@@ -1,0 +1,25 @@
+@startuml WebRTCSequenceDiagram
+
+actor UserA as "User A"
+actor UserB as "User B"
+participant SignalingServer as "Signaling Server"
+participant ICEServer as "ICE Server"
+participant MediaServer as "Media Server"
+
+UserA -> UserB: Initiate WebRTC Connection
+UserA -> SignalingServer: Create Offer
+UserB -> SignalingServer: Create Answer
+UserA <- SignalingServer: Offer SDP
+UserB <- SignalingServer: Answer SDP
+UserA -> SignalingServer: ICE Candidate
+UserB -> SignalingServer: ICE Candidate
+UserA <-- SignalingServer: WebRTC Offer
+UserB <-- SignalingServer: WebRTC Answer
+
+UserA -> ICEServer: Exchange ICE Candidates
+UserB -> ICEServer: Exchange ICE Candidates
+
+UserA <---> UserB: Establish WebRTC Connection
+UserA <--> UserB: Audio/Video/Data Streaming
+
+@enduml

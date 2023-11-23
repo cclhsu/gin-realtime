@@ -1,0 +1,51 @@
+@startuml IFTTT Architecture
+
+!define class class
+!define rectangle class
+
+class User
+User -[hidden]-> UI
+
+rectangle "API Layer" {
+  class IFTTT_API
+  class Third_Party_Service_APIs
+  UI --|> IFTTT_API
+  UI --|> Third_Party_Service_APIs
+}
+
+rectangle "Applet Configuration Layer" {
+  class Applet_Creator
+  class Trigger_Configuration
+  class Action_Configuration
+  UI --|> Applet_Creator
+  Applet_Creator --|> Trigger_Configuration
+  Applet_Creator --|> Action_Configuration
+}
+
+rectangle "Automation Engine Layer" {
+  class Automation_Engine
+  class Trigger_Manager
+  class Action_Executor
+  class Applet_Storage
+  Automation_Engine --|> Trigger_Manager
+  Automation_Engine --|> Action_Executor
+  Automation_Engine --|> Applet_Storage
+}
+
+rectangle "Data Layer" {
+  class Applet_Data
+  class User_Profiles
+  class Service_Data
+  class Log_Data
+  Applet_Creator --|> Applet_Data
+  Applet_Storage --|> Applet_Data
+  UI --|> User_Profiles
+  Automation_Engine --|> Log_Data
+}
+
+rectangle "External Services Layer" {
+  class Third_Party_Services
+  Third_Party_Service_APIs --|> Third_Party_Services
+}
+
+@enduml

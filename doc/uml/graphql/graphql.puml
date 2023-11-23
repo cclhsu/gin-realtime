@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class GraphQLServer
+' class GraphQLClient
+
+' User --> Service : Register GraphQL
+' Service --> GraphQLServer : POST /graphqls
+' GraphQLServer --> Service : 201 Created or Error
+' Service --> GraphQLServer : POST /graphqls/{graphql_id}/payloads
+' GraphQLServer --> Service : Deliver Payload
+' User --> Service : Disconnect GraphQL
+' Service --> GraphQLServer : DELETE /graphqls/{graphql_id}
+' GraphQLServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "GraphQL Server" as GraphQLServer {
+    class GraphQLServerController {
+        + GET /health: string
+    }
+
+    ' class GraphQLServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class GraphQLServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' GraphQLServerController --> GraphQLServerService : Register GraphQL
+    ' GraphQLServerService --> GraphQLServerRepository : Register GraphQL
+    ' GraphQLServerRepository --> GraphQLServerService : 201 Created or Error
+    ' GraphQLServerService --> GraphQLServerController : 201 Created or Error
+
+    ' GraphQLServerController --> GraphQLServerService : Deliver Payload
+    ' GraphQLServerService --> GraphQLServerRepository : Deliver Payload
+    ' GraphQLServerRepository --> GraphQLServerService : 200 OK or Error
+    ' GraphQLServerService --> GraphQLServerController : 200 OK or Error
+
+    ' GraphQLServerController --> GraphQLServerService : Disconnect GraphQL
+    ' GraphQLServerService --> GraphQLServerRepository : Disconnect GraphQL
+    ' GraphQLServerRepository --> GraphQLServerService : 204 No Content or Error
+    ' GraphQLServerService --> GraphQLServerController : 204 No Content or Error
+}
+
+package "GraphQL Clients" as GraphQLClients {
+    package "GraphQL Client 1" as GraphQLClient1 {
+        class GraphQLClient1Controller {
+            + GET /health: string
+        }
+
+        ' class GraphQLClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GraphQLClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Register GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Register GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 201 Created or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 201 Created or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Send Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Send Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Receive Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Receive Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Disconnect GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Disconnect GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 204 No Content or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 204 No Content or Error
+    }
+
+    package "GraphQL Client 2" as GraphQLClient2 {
+        class GraphQLClient2Controller {
+            + GET /health: string
+        }
+
+        ' class GraphQLClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GraphQLClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Register GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Register GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 201 Created or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 201 Created or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Send Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Send Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Receive Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Receive Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Disconnect GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Disconnect GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 204 No Content or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 204 No Content or Error
+    }
+
+    package "GraphQL Client 3" as GraphQLClient3 {
+        class GraphQLClient3Controller {
+            + GET /health: string
+        }
+
+        ' class GraphQLClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GraphQLClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Register GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Register GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 201 Created or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 201 Created or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Send Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Send Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Receive Payload
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Receive Payload
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 200 OK or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 200 OK or Error
+
+        ' GraphQLClient1Controller --> GraphQLClient1Service : Disconnect GraphQL
+        ' GraphQLClient1Service --> GraphQLClient1Repository : Disconnect GraphQL
+        ' GraphQLClient1Repository --> GraphQLClient1Service : 204 No Content or Error
+        ' GraphQLClient1Service --> GraphQLClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: GraphQLPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> GraphQLServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackGraphQLPerformance(graphqlId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logGraphQLEvent(eventData: GraphQLEvent): void
+'     }
+
+'     ' MonitoringService --> GraphQLServer : trackGraphQLPerformance()
+'     ' LoggingService --> GraphQLServer : logGraphQLEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: GraphQLEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> GraphQLServer : trackEvent()
+' }
+
+GraphQLClient1 --> GraphQLServer : POST /graphqls
+GraphQLClient2 --> GraphQLServer : POST /graphqls
+GraphQLClient3 --> GraphQLServer : POST /graphqls
+
+GraphQLServer --> GraphQLClient1 : 201 Created or Error
+GraphQLServer --> GraphQLClient2 : 201 Created or Error
+GraphQLServer --> GraphQLClient3 : 201 Created or Error
+
+GraphQLClient1 --> GraphQLServer : POST /graphqls/{graphql_id}/payloads
+GraphQLClient2 --> GraphQLServer : POST /graphqls/{graphql_id}/payloads
+GraphQLClient3 --> GraphQLServer : POST /graphqls/{graphql_id}/payloads
+
+GraphQLServer --> GraphQLClient1 : Deliver Payload
+GraphQLServer --> GraphQLClient2 : Deliver Payload
+GraphQLServer --> GraphQLClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> GraphQLServer : Track GraphQL Performance
+' LoggingService --> GraphQLServer : Log GraphQL Event
+' EventTrackingService --> GraphQLServer : Track Event
+
+@enduml

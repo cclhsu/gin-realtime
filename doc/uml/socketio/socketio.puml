@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class SocketioServer
+' class SocketioClient
+
+' User --> Service : Register Socketio
+' Service --> SocketioServer : POST /socketios
+' SocketioServer --> Service : 201 Created or Error
+' Service --> SocketioServer : POST /socketios/{socketio_id}/payloads
+' SocketioServer --> Service : Deliver Payload
+' User --> Service : Disconnect Socketio
+' Service --> SocketioServer : DELETE /socketios/{socketio_id}
+' SocketioServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Socketio Server" as SocketioServer {
+    class SocketioServerController {
+        + GET /health: string
+    }
+
+    ' class SocketioServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class SocketioServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' SocketioServerController --> SocketioServerService : Register Socketio
+    ' SocketioServerService --> SocketioServerRepository : Register Socketio
+    ' SocketioServerRepository --> SocketioServerService : 201 Created or Error
+    ' SocketioServerService --> SocketioServerController : 201 Created or Error
+
+    ' SocketioServerController --> SocketioServerService : Deliver Payload
+    ' SocketioServerService --> SocketioServerRepository : Deliver Payload
+    ' SocketioServerRepository --> SocketioServerService : 200 OK or Error
+    ' SocketioServerService --> SocketioServerController : 200 OK or Error
+
+    ' SocketioServerController --> SocketioServerService : Disconnect Socketio
+    ' SocketioServerService --> SocketioServerRepository : Disconnect Socketio
+    ' SocketioServerRepository --> SocketioServerService : 204 No Content or Error
+    ' SocketioServerService --> SocketioServerController : 204 No Content or Error
+}
+
+package "Socketio Clients" as SocketioClients {
+    package "Socketio Client 1" as SocketioClient1 {
+        class SocketioClient1Controller {
+            + GET /health: string
+        }
+
+        ' class SocketioClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class SocketioClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Register Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Register Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 201 Created or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 201 Created or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Send Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Send Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Receive Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Receive Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Disconnect Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Disconnect Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 204 No Content or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 204 No Content or Error
+    }
+
+    package "Socketio Client 2" as SocketioClient2 {
+        class SocketioClient2Controller {
+            + GET /health: string
+        }
+
+        ' class SocketioClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class SocketioClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Register Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Register Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 201 Created or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 201 Created or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Send Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Send Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Receive Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Receive Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Disconnect Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Disconnect Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 204 No Content or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 204 No Content or Error
+    }
+
+    package "Socketio Client 3" as SocketioClient3 {
+        class SocketioClient3Controller {
+            + GET /health: string
+        }
+
+        ' class SocketioClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class SocketioClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Register Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Register Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 201 Created or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 201 Created or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Send Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Send Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Receive Payload
+        ' SocketioClient1Service --> SocketioClient1Repository : Receive Payload
+        ' SocketioClient1Repository --> SocketioClient1Service : 200 OK or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 200 OK or Error
+
+        ' SocketioClient1Controller --> SocketioClient1Service : Disconnect Socketio
+        ' SocketioClient1Service --> SocketioClient1Repository : Disconnect Socketio
+        ' SocketioClient1Repository --> SocketioClient1Service : 204 No Content or Error
+        ' SocketioClient1Service --> SocketioClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: SocketioPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> SocketioServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackSocketioPerformance(socketioId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logSocketioEvent(eventData: SocketioEvent): void
+'     }
+
+'     ' MonitoringService --> SocketioServer : trackSocketioPerformance()
+'     ' LoggingService --> SocketioServer : logSocketioEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: SocketioEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> SocketioServer : trackEvent()
+' }
+
+SocketioClient1 --> SocketioServer : POST /socketios
+SocketioClient2 --> SocketioServer : POST /socketios
+SocketioClient3 --> SocketioServer : POST /socketios
+
+SocketioServer --> SocketioClient1 : 201 Created or Error
+SocketioServer --> SocketioClient2 : 201 Created or Error
+SocketioServer --> SocketioClient3 : 201 Created or Error
+
+SocketioClient1 --> SocketioServer : POST /socketios/{socketio_id}/payloads
+SocketioClient2 --> SocketioServer : POST /socketios/{socketio_id}/payloads
+SocketioClient3 --> SocketioServer : POST /socketios/{socketio_id}/payloads
+
+SocketioServer --> SocketioClient1 : Deliver Payload
+SocketioServer --> SocketioClient2 : Deliver Payload
+SocketioServer --> SocketioClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> SocketioServer : Track Socketio Performance
+' LoggingService --> SocketioServer : Log Socketio Event
+' EventTrackingService --> SocketioServer : Track Event
+
+@enduml

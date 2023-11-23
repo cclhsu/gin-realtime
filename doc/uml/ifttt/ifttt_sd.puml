@@ -1,0 +1,23 @@
+Title: IFTTT Applet Execution Sequence
+
+participant User
+participant IFTTT as "IFTTT Platform"
+participant Trigger as "Trigger Service"
+participant Action as "Action Service"
+
+User->IFTTT: Creates an applet
+User->IFTTT: Defines the "if this" trigger
+User->IFTTT: Defines the "then that" action
+
+User->IFTTT: Specifies trigger settings
+Trigger->IFTTT: Monitors the specified event
+
+User->IFTTT: Specifies action settings
+Action->IFTTT: Prepares to perform the action
+
+Trigger->Action: Trigger event occurs
+
+Action->Action: Executes the specified action
+
+Action->IFTTT: Reports action completion
+IFTTT->User: Notifies the user of applet execution

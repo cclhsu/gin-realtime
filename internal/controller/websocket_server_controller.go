@@ -9,6 +9,7 @@ import (
 )
 
 type WebsocketServerControllerInterface interface {
+	NewWebsocketServerController(ctx context.Context, logger *logrus.Logger, websocketServerService *service.WebsocketServerService) *WebsocketServerController
 	WebsocketHandler(ginContext *gin.Context)
 }
 
@@ -36,7 +37,7 @@ func NewWebsocketServerController(ctx context.Context, logger *logrus.Logger, we
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /ws [get]
+// @Router /websocket/ws [get]
 func (wsc *WebsocketServerController) WebsocketHandler(ginContext *gin.Context) {
 	wsc.logger.Info("WebsocketHandler")
 	wsc.websocketServerService.WebsocketHandler(ginContext)

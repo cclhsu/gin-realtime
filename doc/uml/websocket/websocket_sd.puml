@@ -1,0 +1,30 @@
+@startuml WebSocketSequenceDiagram
+
+actor User
+participant Client as "WebSocket Client"
+participant Server as "WebSocket Server"
+
+User -> Client: Initiate WebSocket Connection
+Client -> Server: WebSocket Handshake
+Server --> Client: WebSocket Handshake Response
+
+User -> Client: Send Message
+Client -> Server: WebSocket Message
+Server --> Client: Handle Message
+
+User -> Client: Receive Message
+Client --> User: Display Message
+
+User -> Client: Send Message
+Client -> Server: WebSocket Message
+Server --> Client: Handle Message
+
+User -> Client: Receive Message
+Client --> User: Display Message
+
+User -> Client: Close Connection
+Client -> Server: WebSocket Close
+Server --> Client: Close Acknowledgment
+Client --> User: Connection Closed
+
+@enduml

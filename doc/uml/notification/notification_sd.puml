@@ -1,0 +1,22 @@
+@startuml Notification System
+
+actor User as User
+participant App as "Your App"
+participant MonitoringService as "Monitoring Service"
+participant EmailService as "Email Service"
+participant SlackService as "Slack Service"
+participant MobileAppService as "Mobile App Service"
+
+User -> App: Initiates Notification
+App -> MonitoringService: Monitor Event
+
+loop Event Occurs
+  MonitoringService -> App: Event Detected
+  App -> EmailService: Send Email
+  App -> SlackService: Send Slack Message
+  App -> MobileAppService: Push Notification
+end
+
+MonitoringService --> App: Event Cleared
+
+@enduml

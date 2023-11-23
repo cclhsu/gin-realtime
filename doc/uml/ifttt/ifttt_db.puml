@@ -1,0 +1,54 @@
+@startuml IFTTTSchema
+
+!define ENTITY entity
+
+package "Database" {
+  !define PRIMARY_KEY <<PK>>
+
+  ENTITY User {
+    +user_id {PRIMARY_KEY}: int
+    username: string
+    email: string
+    password_hash: string
+  }
+
+  ENTITY Applet {
+    +applet_id {PRIMARY_KEY}: int
+    +user_id {PRIMARY_KEY}: int
+    name: string
+    description: string
+    enabled: boolean
+    last_executed_at: datetime
+  }
+
+  ENTITY Trigger {
+    +trigger_id {PRIMARY_KEY}: int
+    +applet_id {PRIMARY_KEY}: int
+    service_name: string
+    trigger_type: string
+    settings: json
+  }
+
+  ENTITY Action {
+    +action_id {PRIMARY_KEY}: int
+    +applet_id {PRIMARY_KEY}: int
+    service_name: string
+    action_type: string
+    settings: json
+  }
+
+  ENTITY ExecutionLog {
+    +log_id {PRIMARY_KEY}: int
+    +applet_id {PRIMARY_KEY}: int
+    execution_time: datetime
+    status: string
+    result: json
+  }
+
+  User --|{ Applet
+  Applet --|{ Trigger
+  Applet --|{ Action
+  Applet --|{ ExecutionLog
+}
+
+@enduml

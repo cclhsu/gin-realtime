@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulWebpushClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulWebpushClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, webpushClientService *service.WebpushClientService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	webpushClientController := controller.NewWebpushClientController(ctx, logger, webpushClientService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -62,7 +63,7 @@ func SetupRestfulWebpushClientRoutes(ctx context.Context, r *gin.Engine, host st
 	docGroup := r.Group("/doc")
 	{
 		// openapiDocs.SwaggerInfo.BasePath = "/"
-		// openapiDocs.SwaggerInfowebhook_client_service.BasePath = "/"
+		// openapiDocs.SwaggerInfowebpush_client_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -80,5 +81,14 @@ func SetupRestfulWebpushClientRoutes(ctx context.Context, r *gin.Engine, host st
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	webpushGroup := r.Group("/webpush-client")
+	{
+		// Get health check
+		webpushGroup.GET("/health", webpushClientController.Health)
+
+		// Send message to server
+		webpushGroup.GET("/send", webpushClientController.Send)
 	}
 }

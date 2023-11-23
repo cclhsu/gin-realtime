@@ -10,10 +10,10 @@ import (
 
 type KafkaClientInterface interface {
 	NewKafkaClientService(ctx context.Context, logger *logrus.Logger) *KafkaClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewKafkaClientService(ctx context.Context, logger *logrus.Logger) *KafkaCli
 	}
 }
 
-func (kcs *KafkaClientService) Initialize() {
+func (kcs *KafkaClientService) Initialize() error {
 	kcs.logger.Info("KafkaClientService Initialize")
 	kcs.kafkaServerServiceURL = kcs.initializeKafkaServerServiceURL()
 	kcs.logger.Infof("Kafka Server URL: %s\n", kcs.kafkaServerServiceURL)
+	return nil
 }
 
 func (kcs *KafkaClientService) initializeKafkaServerServiceURL() string {
@@ -47,7 +48,7 @@ func (kcs *KafkaClientService) initializeKafkaServerServiceURL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/kafka/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (kcs *KafkaClientService) Connection() error {
@@ -60,9 +61,9 @@ func (kcs *KafkaClientService) Disconnection() error {
 	return nil
 }
 
-func (kcs *KafkaClientService) Trigger(message string) (string, error) {
-	kcs.logger.Info("KafkaClientService Trigger")
-	return "KafkaClientService Trigger", nil
+func (kcs *KafkaClientService) Send(message string) (string, error) {
+	kcs.logger.Info("KafkaClientService Send")
+	return "KafkaClientService Send", nil
 }
 
 func (kcs *KafkaClientService) Echo() (string, error) {

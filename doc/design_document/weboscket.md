@@ -1,8 +1,0 @@
-- https://gist.github.com/crosstyan/47e7d3fa1b9e4716c0d6c76760a4a70c
-- https://lwebapp.com/en/post/go-websocket-chat-server
-- https://lwebapp.com/en/post/go-websocket-simple-server
-- https://hoohoo.top/blog/20220320172715-go-websocket/
-- https://juejin.cn/post/7103737973782511646
-- https://websocketking.com/
-- https://betterprogramming.pub/building-web-chat-with-go-and-websockets-312f459c001a
-- https://cloud.tencent.com/developer/article/1774583

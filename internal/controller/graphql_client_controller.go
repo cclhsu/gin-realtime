@@ -12,7 +12,7 @@ import (
 type GraphQLClientControllerInterface interface {
 	Connect(c *gin.Context)
 	Disconnect(c *gin.Context)
-	Trigger(c *gin.Context)
+	Send(c *gin.Context)
 	// Echo(c *gin.Context)
 	// Broadcast(c *gin.Context)
 	Health(c *gin.Context)
@@ -32,30 +32,30 @@ func NewGraphQLClientController(ctx context.Context, logger *logrus.Logger, grap
 	}
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/graphql/health' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/graphql-client/health' | jq
 // @Summary graphql client health
 // @Description graphql client health
-// @Tags graphql
+// @Tags graphql-client
 // @Accept json
 // @Produce json
 // @Success 200 {object} string "OK"
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /graphql/health [get]
+// @Router /graphql-client/health [get]
 func (wcc *GraphQLClientController) Health(ginContext *gin.Context) {
 	wcc.logger.Info("GraphQLClientController HealthHandler")
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": wcc.graphQLClientService.Health(),
 	})
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/graphql/trigger?message=hello' | jq
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/graphql/trigger' -d '{"message":"hello"}' | jq
-// @Summary graphql client trigger message
-// @Description graphql client trigger message
-// @Tags graphql
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/graphql-client/send?message=hello' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/graphql-client/send' -d '{"message":"hello"}' | jq
+// @Summary graphql client send message
+// @Description graphql client send message
+// @Tags graphql-client
 // @Accept json
 // @Produce json
 // @Param message query string true "message"
@@ -63,12 +63,12 @@ func (wcc *GraphQLClientController) Health(ginContext *gin.Context) {
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /graphql/trigger [get]
-func (wcc *GraphQLClientController) Trigger(ginContext *gin.Context) {
-	wcc.logger.Info("GraphQLClientController TriggerHandler")
+// @Router /graphql-client/send [get]
+func (wcc *GraphQLClientController) Send(ginContext *gin.Context) {
+	wcc.logger.Info("GraphQLClientController SendHandler")
 
 	message := ginContext.Query("message")
-	message, err := wcc.graphQLClientService.Trigger(message)
+	message, err := wcc.graphQLClientService.Send(message)
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -76,17 +76,17 @@ func (wcc *GraphQLClientController) Trigger(ginContext *gin.Context) {
 
 	// var data model.GraphQLMessageDTO
 	// if err := ginContext.ShouldBindJSON(&webhookData); err != nil {
-	// 	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	// message, err  := wcc.graphQLClientService.Trigger(data)
+	// message, err	 := wcc.graphQLClientService.Send(data)
 	// if err != nil {
-	// 	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": message,
 	})
 }

@@ -10,10 +10,10 @@ import (
 
 type WebpushClientInterface interface {
 	NewWebpushClientService(ctx context.Context, logger *logrus.Logger) *WebpushClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewWebpushClientService(ctx context.Context, logger *logrus.Logger) *Webpus
 	}
 }
 
-func (wcs *WebpushClientService) Initialize() {
+func (wcs *WebpushClientService) Initialize() error {
 	wcs.logger.Info("WebpushClientService Initialize")
 	wcs.webpushServerServiceURL = wcs.initializeWebpushServerServiceURL()
 	wcs.logger.Infof("Webpush Server URL: %s\n", wcs.webpushServerServiceURL)
+	return nil
 }
 
 func (wcs *WebpushClientService) initializeWebpushServerServiceURL() string {
@@ -47,7 +48,7 @@ func (wcs *WebpushClientService) initializeWebpushServerServiceURL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/webpush/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (wcs *WebpushClientService) Connection() error {
@@ -60,9 +61,9 @@ func (wcs *WebpushClientService) Disconnection() error {
 	return nil
 }
 
-func (wcs *WebpushClientService) Trigger(message string) (string, error) {
-	wcs.logger.Info("WebpushClientService Trigger")
-	return "WebpushClientService Trigger", nil
+func (wcs *WebpushClientService) Send(message string) (string, error) {
+	wcs.logger.Info("WebpushClientService Send")
+	return "WebpushClientService Send", nil
 }
 
 func (wcs *WebpushClientService) Echo() (string, error) {

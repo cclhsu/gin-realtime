@@ -1,0 +1,136 @@
+@startuml
+
+' Common interfaces
+
+interface ServiceInterface {
+    +initialize(): void
+    +start(): void
+    +stop(): void
+}
+
+interface ConnectionInterface {
+    +connect(): void
+    +disconnect(): void
+}
+
+interface SubscriptionInterface {
+    +subscribe(topic: String): void
+    +unsubscribe(topic: String): void
+}
+
+interface RegistrationInterface {
+    +register(data: Data): void
+    +unregister(data: Data): void
+}
+
+interface SendInterface {
+    +send(data: Data): void
+    +receive(data: Data): void
+    +broadcast(data: Data): void
+    +echo(data: Data): Data
+    +sendMessage(data: Data): void
+    +receiveMessage(data: Data): void
+}
+
+interface HandleInterface {
+    +handle(data: Data): void
+    +handleClientConnection(data: Data): void
+    +handleClientDisconnection(data: Data): void
+    +handleMessage(data: Data): void
+    +handleHealthStatus(data: Data): void
+    +handleSubscribe(data: Data): void
+    +handleUnsubscribe(data: Data): void
+    +handleRegister(data: Data): void
+    +handleUnregister(data: Data): void
+    +handleEcho(data: Data): void
+    +handleSendMessage(data: Data): void
+    +handleReceiveMessage(data: Data): void
+    +handleBroadcast(data: Data): void
+    +handleReceive(data: Data): void
+    +handleSend(data: Data): void
+    +handleConnect(data: Data): void
+    +handleDisconnect(data: Data): void
+}
+
+interface TaskInterface {
+    +execute(): void
+}
+
+interface HealthStatusInterface {
+    +getStatus(): string
+    +setStatus(status: string): void
+}
+
+interface MessageInterface {
+    +getContent(): string
+    +setContent(content: string): void
+}
+
+' Server interfaces
+
+interface GenericServerControllerInterface {
+    +startServer(port: number): void
+    +stopServer(): void
+    +checkHealth(): HealthStatusInterface
+    +handleClientConnection(client: ConnectionInterface): TaskInterface
+    +broadcast(data: MessageInterface): void
+    +sendMessage(clientId: string, message: string): TaskInterface
+    +echo(clientId: string, message: string): MessageInterface
+    +subscribe(clientId: string, callback: (from: string, message: string) => void): SubscriptionInterface
+    +unsubscribe(clientId: string): void
+    +register(clientId: string): TaskInterface
+    +unregister(clientId: string): void
+}
+
+interface GenericServerServiceInterface {
+    +initialize(): void
+    +onClientConnected(callback: (client: ConnectionInterface) => void): SubscriptionInterface
+    +onClientDisconnected(callback: (client: ConnectionInterface) => void): void
+    +onHealthStatus(callback: (status: string) => void): SubscriptionInterface
+    +onMessageReceived(callback: (from: string, message: string) => void): SubscriptionInterface
+    +onSubscribe(clientId: string, callback: (from: string, message: string) => void): SubscriptionInterface
+    +onUnsubscribe(clientId: string): void
+    +onRegister(clientId: string): TaskInterface
+    +onUnregister(clientId: string): void
+}
+
+' Client interfaces
+
+interface GenericClientControllerInterface {
+    +connect(endpoint: string): void
+    +disconnect(): void
+    +checkHealth(): HealthStatusInterface
+    +sendMessage(to: string, message: string): TaskInterface
+    +send(data: MessageInterface): void
+    +echo(data: MessageInterface): MessageInterface
+    +receive(callback: (data: MessageInterface) => void): void
+    +subscribe(callback: (from: string, message: string) => void): SubscriptionInterface
+    +unsubscribe(): void
+    +register(): TaskInterface
+    +unregister(): void
+}
+
+interface GenericClientServiceInterface {
+    +initialize(): void
+    +onConnected(callback: () => void): SubscriptionInterface
+    +onDisconnected(callback: () => void): void
+    +onHealthStatus(callback: (status: string) => void): SubscriptionInterface
+    +onMessageReceived(callback: (from: string, message: string) => void): SubscriptionInterface
+}
+
+ConnectionInterface <|.. GenericServerControllerInterface
+ConnectionInterface <|.. GenericClientControllerInterface
+
+TaskInterface <|.. GenericServerControllerInterface
+TaskInterface <|.. GenericClientControllerInterface
+
+HealthStatusInterface <|.. GenericServerControllerInterface
+HealthStatusInterface <|.. GenericClientControllerInterface
+
+MessageInterface <|.. GenericServerControllerInterface
+MessageInterface <|.. GenericClientControllerInterface
+
+SubscriptionInterface <|.. GenericServerControllerInterface
+SubscriptionInterface <|.. GenericClientControllerInterface
+
+@enduml

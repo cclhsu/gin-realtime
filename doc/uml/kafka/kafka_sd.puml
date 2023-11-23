@@ -1,0 +1,18 @@
+@startuml KafkaSequenceDiagram
+
+actor Producer
+participant KafkaProducer as "Kafka Producer"
+participant KafkaTopic as "Kafka Topic"
+participant KafkaBroker as "Kafka Broker"
+actor Consumer
+participant KafkaConsumer as "Kafka Consumer"
+
+Producer -> KafkaProducer: Send Message
+KafkaProducer -> KafkaTopic: Publish Message
+KafkaTopic -> KafkaBroker: Store Message
+KafkaConsumer -> KafkaBroker: Subscribe to Topic
+KafkaBroker -> KafkaTopic: Retrieve Message
+KafkaTopic --> KafkaConsumer: Deliver Message
+KafkaConsumer --> Consumer: Process Message
+
+@enduml

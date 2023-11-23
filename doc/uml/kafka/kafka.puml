@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class KafkaServer
+' class KafkaClient
+
+' User --> Service : Register Kafka
+' Service --> KafkaServer : POST /kafkas
+' KafkaServer --> Service : 201 Created or Error
+' Service --> KafkaServer : POST /kafkas/{kafka_id}/payloads
+' KafkaServer --> Service : Deliver Payload
+' User --> Service : Disconnect Kafka
+' Service --> KafkaServer : DELETE /kafkas/{kafka_id}
+' KafkaServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Kafka Server" as KafkaServer {
+    class KafkaServerController {
+        + GET /health: string
+    }
+
+    ' class KafkaServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class KafkaServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' KafkaServerController --> KafkaServerService : Register Kafka
+    ' KafkaServerService --> KafkaServerRepository : Register Kafka
+    ' KafkaServerRepository --> KafkaServerService : 201 Created or Error
+    ' KafkaServerService --> KafkaServerController : 201 Created or Error
+
+    ' KafkaServerController --> KafkaServerService : Deliver Payload
+    ' KafkaServerService --> KafkaServerRepository : Deliver Payload
+    ' KafkaServerRepository --> KafkaServerService : 200 OK or Error
+    ' KafkaServerService --> KafkaServerController : 200 OK or Error
+
+    ' KafkaServerController --> KafkaServerService : Disconnect Kafka
+    ' KafkaServerService --> KafkaServerRepository : Disconnect Kafka
+    ' KafkaServerRepository --> KafkaServerService : 204 No Content or Error
+    ' KafkaServerService --> KafkaServerController : 204 No Content or Error
+}
+
+package "Kafka Clients" as KafkaClients {
+    package "Kafka Client 1" as KafkaClient1 {
+        class KafkaClient1Controller {
+            + GET /health: string
+        }
+
+        ' class KafkaClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class KafkaClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Register Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Register Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 201 Created or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 201 Created or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Send Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Send Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Receive Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Receive Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Disconnect Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Disconnect Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 204 No Content or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 204 No Content or Error
+    }
+
+    package "Kafka Client 2" as KafkaClient2 {
+        class KafkaClient2Controller {
+            + GET /health: string
+        }
+
+        ' class KafkaClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class KafkaClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Register Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Register Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 201 Created or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 201 Created or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Send Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Send Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Receive Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Receive Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Disconnect Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Disconnect Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 204 No Content or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 204 No Content or Error
+    }
+
+    package "Kafka Client 3" as KafkaClient3 {
+        class KafkaClient3Controller {
+            + GET /health: string
+        }
+
+        ' class KafkaClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class KafkaClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Register Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Register Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 201 Created or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 201 Created or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Send Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Send Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Receive Payload
+        ' KafkaClient1Service --> KafkaClient1Repository : Receive Payload
+        ' KafkaClient1Repository --> KafkaClient1Service : 200 OK or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 200 OK or Error
+
+        ' KafkaClient1Controller --> KafkaClient1Service : Disconnect Kafka
+        ' KafkaClient1Service --> KafkaClient1Repository : Disconnect Kafka
+        ' KafkaClient1Repository --> KafkaClient1Service : 204 No Content or Error
+        ' KafkaClient1Service --> KafkaClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: KafkaPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> KafkaServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackKafkaPerformance(kafkaId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logKafkaEvent(eventData: KafkaEvent): void
+'     }
+
+'     ' MonitoringService --> KafkaServer : trackKafkaPerformance()
+'     ' LoggingService --> KafkaServer : logKafkaEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: KafkaEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> KafkaServer : trackEvent()
+' }
+
+KafkaClient1 --> KafkaServer : POST /kafkas
+KafkaClient2 --> KafkaServer : POST /kafkas
+KafkaClient3 --> KafkaServer : POST /kafkas
+
+KafkaServer --> KafkaClient1 : 201 Created or Error
+KafkaServer --> KafkaClient2 : 201 Created or Error
+KafkaServer --> KafkaClient3 : 201 Created or Error
+
+KafkaClient1 --> KafkaServer : POST /kafkas/{kafka_id}/payloads
+KafkaClient2 --> KafkaServer : POST /kafkas/{kafka_id}/payloads
+KafkaClient3 --> KafkaServer : POST /kafkas/{kafka_id}/payloads
+
+KafkaServer --> KafkaClient1 : Deliver Payload
+KafkaServer --> KafkaClient2 : Deliver Payload
+KafkaServer --> KafkaClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> KafkaServer : Track Kafka Performance
+' LoggingService --> KafkaServer : Log Kafka Event
+' EventTrackingService --> KafkaServer : Track Event
+
+@enduml

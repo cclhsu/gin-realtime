@@ -21,16 +21,16 @@ import (
 )
 
 var (
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 
-	host     string
-	port     string
+	host	 string
+	port	 string
 	endpoint string
-	router   *gin.Engine
+	router	 *gin.Engine
 
-	helloService           *service.HelloService
-	healthService          *service.HealthService
+	helloService		   *service.HelloService
+	healthService		   *service.HealthService
 	websocketClientService *service.WebsocketClientService
 )
 
@@ -76,8 +76,8 @@ func setupLogger() {
 	//	// You can customize other formatting options here
 	// })
 	logger.SetFormatter(&logrus.TextFormatter{
-		DisableColors:    false, // Disable colored output
-		FullTimestamp:    true,  // Include the timestamp
+		DisableColors:	  false, // Disable colored output
+		FullTimestamp:	  true,	 // Include the timestamp
 		TimestampFormat:  time.RFC3339,
 		CallerPrettyfier: CallerPrettyfier,
 	})

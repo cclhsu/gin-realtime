@@ -10,10 +10,10 @@ import (
 
 type RedisClientInterface interface {
 	NewRedisClientService(ctx context.Context, logger *logrus.Logger) *RedisClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewRedisClientService(ctx context.Context, logger *logrus.Logger) *RedisCli
 	}
 }
 
-func (rcs *RedisClientService) Initialize() {
+func (rcs *RedisClientService) Initialize() error {
 	rcs.logger.Info("RedisClientService Initialize")
 	rcs.redisServerServiceURL = rcs.initializeRedisServerServiceURL()
 	rcs.logger.Infof("Redis Server URL: %s\n", rcs.redisServerServiceURL)
+	return nil
 }
 
 func (rcs *RedisClientService) initializeRedisServerServiceURL() string {
@@ -47,7 +48,7 @@ func (rcs *RedisClientService) initializeRedisServerServiceURL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/redis/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (rcs *RedisClientService) Connection() error {
@@ -60,8 +61,8 @@ func (rcs *RedisClientService) Disconnection() error {
 	return nil
 }
 
-func (rcs *RedisClientService) Trigger(message string) (string, error) {
-	rcs.logger.Info("RedisClientService Trigger")
+func (rcs *RedisClientService) Send(message string) (string, error) {
+	rcs.logger.Info("RedisClientService Send")
 	return "", nil
 }
 

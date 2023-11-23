@@ -12,7 +12,139 @@
     },
     "basePath": "/",
     "paths": {
-        "/graphql/health": {
+        "/elasticsearch-client/health": {
+            "get": {
+                "description": "elasticsearch client health",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "elasticsearch-client"
+                ],
+                "summary": "elasticsearch client health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/elasticsearch-client/send": {
+            "get": {
+                "description": "elasticsearch client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "elasticsearch-client"
+                ],
+                "summary": "elasticsearch client send message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "message",
+                        "name": "message",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/elasticsearch/handler": {
+            "get": {
+                "description": "elasticsearch handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "elasticsearch"
+                ],
+                "summary": "elasticsearch handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/graphql-client/health": {
             "get": {
                 "description": "graphql client health",
                 "consumes": [
@@ -22,7 +154,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "graphql"
+                    "graphql-client"
                 ],
                 "summary": "graphql client health",
                 "responses": {
@@ -53,9 +185,9 @@
                 }
             }
         },
-        "/graphql/trigger": {
+        "/graphql-client/send": {
             "get": {
-                "description": "graphql client trigger message",
+                "description": "graphql client send message",
                 "consumes": [
                     "application/json"
                 ],
@@ -63,9 +195,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "graphql"
+                    "graphql-client"
                 ],
-                "summary": "graphql client trigger message",
+                "summary": "graphql client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -103,7 +235,48 @@
                 }
             }
         },
-        "/grpc/health": {
+        "/graphql/handler": {
+            "get": {
+                "description": "graphql handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "graphql"
+                ],
+                "summary": "graphql handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/grpc-client/health": {
             "get": {
                 "description": "grpc client health",
                 "consumes": [
@@ -113,7 +286,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "grpc"
+                    "grpc-client"
                 ],
                 "summary": "grpc client health",
                 "responses": {
@@ -144,9 +317,9 @@
                 }
             }
         },
-        "/grpc/trigger": {
+        "/grpc-client/send": {
             "get": {
-                "description": "grpc client trigger message",
+                "description": "grpc client send message",
                 "consumes": [
                     "application/json"
                 ],
@@ -154,9 +327,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "grpc"
+                    "grpc-client"
                 ],
-                "summary": "grpc client trigger message",
+                "summary": "grpc client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -166,6 +339,47 @@
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/grpc/handler": {
+            "get": {
+                "description": "grpc handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "grpc"
+                ],
+                "summary": "grpc handler",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -429,7 +643,7 @@
                 }
             }
         },
-        "/kafka/health": {
+        "/kafka-client/health": {
             "get": {
                 "description": "kafka client health",
                 "consumes": [
@@ -439,7 +653,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "kafka"
+                    "kafka-client"
                 ],
                 "summary": "kafka client health",
                 "responses": {
@@ -470,9 +684,9 @@
                 }
             }
         },
-        "/kafka/trigger": {
+        "/kafka-client/send": {
             "get": {
-                "description": "kafka client trigger message",
+                "description": "kafka client send message",
                 "consumes": [
                     "application/json"
                 ],
@@ -480,9 +694,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "kafka"
+                    "kafka-client"
                 ],
-                "summary": "kafka client trigger message",
+                "summary": "kafka client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -520,7 +734,48 @@
                 }
             }
         },
-        "/redis/health": {
+        "/kafka/handler": {
+            "get": {
+                "description": "kafka handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "kafka"
+                ],
+                "summary": "kafka handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis-client/health": {
             "get": {
                 "description": "redis client health",
                 "consumes": [
@@ -530,7 +785,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "redis"
+                    "redis-client"
                 ],
                 "summary": "redis client health",
                 "responses": {
@@ -561,9 +816,59 @@
                 }
             }
         },
-        "/redis/trigger": {
+        "/redis-client/send": {
             "get": {
-                "description": "redis client trigger message",
+                "description": "redis client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "redis-client"
+                ],
+                "summary": "redis client send message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "message",
+                        "name": "message",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/redis/handler": {
+            "get": {
+                "description": "redis handler",
                 "consumes": [
                     "application/json"
                 ],
@@ -573,7 +878,89 @@
                 "tags": [
                     "redis"
                 ],
-                "summary": "redis client trigger message",
+                "summary": "redis handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/server-sent-event-client/health": {
+            "get": {
+                "description": "server-sent-event client health",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server-sent-event-client"
+                ],
+                "summary": "server-sent-event client health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/server-sent-event-client/send": {
+            "get": {
+                "description": "server-sent-event client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "server-sent-event-client"
+                ],
+                "summary": "server-sent-event client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -611,9 +998,9 @@
                 }
             }
         },
-        "/serversentevent/health": {
+        "/server-sent-event/handler": {
             "get": {
-                "description": "serversentevent client health",
+                "description": "server-sent-event handler",
                 "consumes": [
                     "application/json"
                 ],
@@ -621,9 +1008,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "serversentevent"
+                    "server-sent-event"
                 ],
-                "summary": "serversentevent client health",
+                "summary": "server-sent-event handler",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -652,9 +1039,9 @@
                 }
             }
         },
-        "/serversentevent/trigger": {
+        "/socket-io-client/health": {
             "get": {
-                "description": "serversentevent client trigger message",
+                "description": "socketIO client health",
                 "consumes": [
                     "application/json"
                 ],
@@ -662,9 +1049,50 @@
                     "application/json"
                 ],
                 "tags": [
-                    "serversentevent"
+                    "socket-io-client"
                 ],
-                "summary": "serversentevent client trigger message",
+                "summary": "socketIO client health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/socket-io-client/send": {
+            "get": {
+                "description": "socketIO client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "socket-io-client"
+                ],
+                "summary": "socketIO client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -702,9 +1130,9 @@
                 }
             }
         },
-        "/webhook-client/disconnect/{webhookId}": {
-            "put": {
-                "description": "disconnect webhook",
+        "/socket-io/handler": {
+            "get": {
+                "description": "socketio handler",
                 "consumes": [
                     "application/json"
                 ],
@@ -712,23 +1140,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "webhook-client"
+                    "socketio"
                 ],
-                "summary": "disconnect webhook",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Webhook ID",
-                        "name": "webhookId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "socketio handler",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -752,9 +1171,9 @@
                 }
             }
         },
-        "/webhook-client/handle-payload": {
-            "post": {
-                "description": "handle triggered event",
+        "/webhook-client/message": {
+            "get": {
+                "description": "List messages",
                 "consumes": [
                     "application/json"
                 ],
@@ -764,170 +1183,14 @@
                 "tags": [
                     "webhook-client"
                 ],
-                "summary": "handle triggered event",
-                "parameters": [
-                    {
-                        "description": "Event Data",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.EventDataDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.EventDataResponseDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/webhook-client/register": {
-            "post": {
-                "description": "register webhook",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "webhook-client"
-                ],
-                "summary": "register webhook",
-                "parameters": [
-                    {
-                        "description": "Webhook Info",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.WebhookInfoDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/webhook-client/trigger-event": {
-            "post": {
-                "description": "trigger event",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "webhook-client"
-                ],
-                "summary": "trigger event",
-                "parameters": [
-                    {
-                        "description": "Event Data",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.EventDataDTO"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/model.EventDataResponseDTO"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/webhook/handle-event": {
-            "post": {
-                "description": "list registered webhooks",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "webhook"
-                ],
-                "summary": "list registered webhooks",
+                "summary": "List messages",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.WebhookInfoDTO"
+                                "$ref": "#/definitions/model.MessageDTO"
                             }
                         }
                     },
@@ -952,9 +1215,9 @@
                 }
             }
         },
-        "/webhook/list": {
-            "get": {
-                "description": "update webhook",
+        "/webhook-client/message/receive": {
+            "post": {
+                "description": "Receive message",
                 "consumes": [
                     "application/json"
                 ],
@@ -962,9 +1225,207 @@
                     "application/json"
                 ],
                 "tags": [
-                    "webhook"
+                    "webhook-client"
                 ],
-                "summary": "update webhook",
+                "summary": "Receive message",
+                "parameters": [
+                    {
+                        "description": "Message Info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook-client/message/send": {
+            "post": {
+                "description": "Send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook-client"
+                ],
+                "summary": "Send message",
+                "parameters": [
+                    {
+                        "description": "Message Info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook-client/register": {
+            "get": {
+                "description": "list webhook registrations",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook-client"
+                ],
+                "summary": "list webhook registrations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.RegistrationDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Register webhook",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook-client"
+                ],
+                "summary": "Register webhook",
+                "parameters": [
+                    {
+                        "description": "Webhook Info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.RegistrationDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook-client/register/{webhookId}": {
+            "put": {
+                "description": "Update webhook registration",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook-client"
+                ],
+                "summary": "Update webhook registration",
                 "parameters": [
                     {
                         "type": "string",
@@ -979,7 +1440,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookInfoDTO"
+                            "$ref": "#/definitions/model.RegistrationDTO"
                         }
                     }
                 ],
@@ -987,7 +1448,203 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Unregister webhook",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook-client"
+                ],
+                "summary": "Unregister webhook",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Webhook ID",
+                        "name": "webhookId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook/message": {
+            "get": {
+                "description": "List messages",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook"
+                ],
+                "summary": "List messages",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.MessageDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook/message/receive": {
+            "post": {
+                "description": "Receive message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook"
+                ],
+                "summary": "Receive message",
+                "parameters": [
+                    {
+                        "description": "Message Info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webhook/message/send": {
+            "post": {
+                "description": "Send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook"
+                ],
+                "summary": "Send message",
+                "parameters": [
+                    {
+                        "description": "Message Info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.MessageResponseDTO"
                         }
                     },
                     "400": {
@@ -1012,8 +1669,8 @@
             }
         },
         "/webhook/register": {
-            "post": {
-                "description": "register webhook",
+            "get": {
+                "description": "List registered webhooks",
                 "consumes": [
                     "application/json"
                 ],
@@ -1023,7 +1680,49 @@
                 "tags": [
                     "webhook"
                 ],
-                "summary": "register webhook",
+                "summary": "List registered webhooks",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.RegistrationDTO"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Register webhook",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webhook"
+                ],
+                "summary": "Register webhook",
                 "parameters": [
                     {
                         "description": "Webhook Info",
@@ -1031,7 +1730,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookInfoDTO"
+                            "$ref": "#/definitions/model.RegistrationDTO"
                         }
                     }
                 ],
@@ -1039,7 +1738,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
                         }
                     },
                     "400": {
@@ -1063,9 +1762,9 @@
                 }
             }
         },
-        "/webhook/{webhookId}": {
+        "/webhook/register/{webhookId}": {
             "put": {
-                "description": "update webhook",
+                "description": "Update webhook registration",
                 "consumes": [
                     "application/json"
                 ],
@@ -1075,7 +1774,7 @@
                 "tags": [
                     "webhook"
                 ],
-                "summary": "update webhook",
+                "summary": "Update webhook registration",
                 "parameters": [
                     {
                         "type": "string",
@@ -1090,7 +1789,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookInfoDTO"
+                            "$ref": "#/definitions/model.RegistrationDTO"
                         }
                     }
                 ],
@@ -1098,7 +1797,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
                         }
                     },
                     "400": {
@@ -1122,7 +1821,7 @@
                 }
             },
             "delete": {
-                "description": "unregister webhook",
+                "description": "Unregister webhook",
                 "consumes": [
                     "application/json"
                 ],
@@ -1132,7 +1831,7 @@
                 "tags": [
                     "webhook"
                 ],
-                "summary": "unregister webhook",
+                "summary": "Unregister webhook",
                 "parameters": [
                     {
                         "type": "string",
@@ -1146,7 +1845,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.WebhookRegistrationResponseDTO"
+                            "$ref": "#/definitions/model.RegistrationResponseDTO"
                         }
                     },
                     "400": {
@@ -1170,7 +1869,7 @@
                 }
             }
         },
-        "/webpush/health": {
+        "/webpush-client/health": {
             "get": {
                 "description": "webpush client health",
                 "consumes": [
@@ -1180,7 +1879,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "webpush"
+                    "webpush-client"
                 ],
                 "summary": "webpush client health",
                 "responses": {
@@ -1211,9 +1910,9 @@
                 }
             }
         },
-        "/webpush/trigger": {
+        "/webpush-client/send": {
             "get": {
-                "description": "webpush client trigger message",
+                "description": "webpush client send message",
                 "consumes": [
                     "application/json"
                 ],
@@ -1221,9 +1920,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "webpush"
+                    "webpush-client"
                 ],
-                "summary": "webpush client trigger message",
+                "summary": "webpush client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -1261,7 +1960,180 @@
                 }
             }
         },
-        "/websocket/health": {
+        "/webpush/handler": {
+            "get": {
+                "description": "webpush handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webpush"
+                ],
+                "summary": "webpush handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webrtc-client/health": {
+            "get": {
+                "description": "webrtc client health",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webrtc-client"
+                ],
+                "summary": "webrtc client health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webrtc-client/send": {
+            "get": {
+                "description": "webrtc client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webrtc-client"
+                ],
+                "summary": "webrtc client send message",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "message",
+                        "name": "message",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/webrtc/handler": {
+            "get": {
+                "description": "webrtc handler",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "webrtc"
+                ],
+                "summary": "webrtc handler",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/websocket-client/health": {
             "get": {
                 "description": "websocket client health",
                 "consumes": [
@@ -1271,7 +2143,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "websocket"
+                    "websocket-client"
                 ],
                 "summary": "websocket client health",
                 "responses": {
@@ -1302,9 +2174,9 @@
                 }
             }
         },
-        "/websocket/trigger": {
+        "/websocket-client/message": {
             "get": {
-                "description": "websocket client trigger message",
+                "description": "websocket client list messages",
                 "consumes": [
                     "application/json"
                 ],
@@ -1312,9 +2184,91 @@
                     "application/json"
                 ],
                 "tags": [
-                    "websocket"
+                    "websocket-client"
                 ],
-                "summary": "websocket client trigger message",
+                "summary": "websocket client list messages",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/websocket-client/message/receive": {
+            "post": {
+                "description": "websocket client receive message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "websocket-client"
+                ],
+                "summary": "websocket client receive message",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/websocket-client/send": {
+            "post": {
+                "description": "websocket client send message",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "websocket-client"
+                ],
+                "summary": "websocket client send message",
                 "parameters": [
                     {
                         "type": "string",
@@ -1352,7 +2306,7 @@
                 }
             }
         },
-        "/ws": {
+        "/websocket/ws": {
             "get": {
                 "description": "websocket handler",
                 "consumes": [
@@ -1403,30 +2357,6 @@
                 }
             }
         },
-        "model.EventDataDTO": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "id": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.EventDataResponseDTO": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
         "model.HelloJsonResponse": {
             "type": "object",
             "properties": {
@@ -1435,66 +2365,297 @@
                 }
             }
         },
-        "model.WebhookConfigDTO": {
+        "model.MessageDTO": {
             "type": "object",
             "properties": {
-                "isActive": {
-                    "type": "boolean"
-                },
-                "secret": {
+                "UUID": {
                     "type": "string"
+                },
+                "action": {
+                    "$ref": "#/definitions/types.ACTION_TYPES"
+                },
+                "data": {
+                    "description": "Timestamp     time.Time               `json:\"timestamp\"`",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "environment": {
+                    "$ref": "#/definitions/types.ENVIRONMENT_TYPES"
+                },
+                "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "recipient": {
+                    "type": "string"
+                },
+                "recipientType": {
+                    "$ref": "#/definitions/types.RECIPIENT_TYPES"
+                },
+                "recipients": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "stage": {
+                    "$ref": "#/definitions/types.STAGE_TYPES"
                 },
                 "type": {
-                    "$ref": "#/definitions/model.WebhookType"
+                    "$ref": "#/definitions/types.MESSAGE_TYPES"
                 }
             }
         },
-        "model.WebhookInfoDTO": {
+        "model.MessageResponseDTO": {
             "type": "object",
             "properties": {
-                "config": {
-                    "$ref": "#/definitions/model.WebhookConfigDTO"
+                "code": {
+                    "type": "integer"
                 },
-                "expiryDate": {
-                    "type": "string"
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
                 },
-                "id": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.WebhookRegistrationResponseDTO": {
-            "type": "object",
-            "properties": {
-                "data": {},
                 "message": {
                     "type": "string"
                 },
-                "success": {
-                    "type": "boolean"
+                "status": {
+                    "type": "string"
                 }
             }
         },
-        "model.WebhookType": {
-            "type": "string",
+        "model.RegistrationDTO": {
+            "type": "object",
+            "properties": {
+                "UUID": {
+                    "type": "string"
+                },
+                "callbackURL": {
+                    "description": "Timestamp     time.Time                 `json:\"timestamp\"`",
+                    "type": "string"
+                },
+                "environment": {
+                    "$ref": "#/definitions/types.ENVIRONMENT_TYPES"
+                },
+                "secret": {
+                    "description": "Expires       time.Time                 `json:\"expires\"`",
+                    "type": "string"
+                },
+                "sender": {
+                    "type": "string"
+                },
+                "stage": {
+                    "$ref": "#/definitions/types.STAGE_TYPES"
+                },
+                "state": {
+                    "$ref": "#/definitions/types.GENERAL_STATE_TYPES"
+                },
+                "subscriptions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "$ref": "#/definitions/types.MESSAGE_TYPES"
+                }
+            }
+        },
+        "model.RegistrationResponseDTO": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.ACTION_TYPES": {
+            "type": "integer",
             "enum": [
-                "test",
-                "dev",
-                "prod",
-                "broadcast",
-                "system",
-                "exclusive"
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
             ],
             "x-enum-varnames": [
-                "Test",
-                "Dev",
-                "Prod",
-                "Broadcast",
-                "System",
-                "Exclusive"
+                "ACTION_TYPES_UNSPECIFIED",
+                "ACTION_TYPES_LIST",
+                "ACTION_TYPES_GET",
+                "ACTION_TYPES_CREATE",
+                "ACTION_TYPES_UPDATE",
+                "ACTION_TYPES_DELETE",
+                "ACTION_TYPES_INIT",
+                "ACTION_TYPES_REQUIRED",
+                "ACTION_TYPES_OPTIONAL",
+                "ACTION_TYPES_CONNECT",
+                "ACTION_TYPES_DISCONNECT",
+                "ACTION_TYPES_REGISTER",
+                "ACTION_TYPES_UNREGISTER",
+                "ACTION_TYPES_SUBSCRIBE",
+                "ACTION_TYPES_UNSUBSCRIBE",
+                "ACTION_TYPES_UNRECOGNIZED"
+            ]
+        },
+        "types.ENVIRONMENT_TYPES": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "x-enum-varnames": [
+                "ENVIRONMENT_TYPES_UNSPECIFIED",
+                "ENVIRONMENT_TYPES_LOCAL",
+                "ENVIRONMENT_TYPES_REMOTE",
+                "ENVIRONMENT_TYPES_DOCKER",
+                "ENVIRONMENT_TYPES_KUBERNETES",
+                "ENVIRONMENT_TYPES_UNRECOGNIZED"
+            ]
+        },
+        "types.GENERAL_STATE_TYPES": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21
+            ],
+            "x-enum-varnames": [
+                "GENERAL_STATE_TYPES_UNSPECIFIED",
+                "GENERAL_STATE_TYPES_DISABLED",
+                "GENERAL_STATE_TYPES_ENABLED",
+                "GENERAL_STATE_TYPES_INACTIVE",
+                "GENERAL_STATE_TYPES_ACTIVE",
+                "GENERAL_STATE_TYPES_DISCONNECTED",
+                "GENERAL_STATE_TYPES_CONNECTED",
+                "GENERAL_STATE_TYPES_UNREGISTERED",
+                "GENERAL_STATE_TYPES_REGISTERED",
+                "GENERAL_STATE_TYPES_UNSUBSCRIBED",
+                "GENERAL_STATE_TYPES_SUBSCRIBED",
+                "GENERAL_STATE_TYPES_UNAUTHORIZED",
+                "GENERAL_STATE_TYPES_AUTHORIZED",
+                "GENERAL_STATE_TYPES_UNCONFIRMED",
+                "GENERAL_STATE_TYPES_CONFIRMED",
+                "GENERAL_STATE_TYPES_UNVERIFIED",
+                "GENERAL_STATE_TYPES_VERIFIED",
+                "GENERAL_STATE_TYPES_UNAPPROVED",
+                "GENERAL_STATE_TYPES_APPROVED",
+                "GENERAL_STATE_TYPES_UNFINISHED",
+                "GENERAL_STATE_TYPES_FINISHED",
+                "GENERAL_STATE_TYPES_UNRECOGNIZED"
+            ]
+        },
+        "types.MESSAGE_TYPES": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ],
+            "x-enum-varnames": [
+                "MESSAGE_TYPES_UNSPECIFIED",
+                "MESSAGE_TYPES_UNICAST",
+                "MESSAGE_TYPES_BROADCAST",
+                "MESSAGE_TYPES_ECHO",
+                "MESSAGE_TYPES_HEALTH",
+                "MESSAGE_TYPES_TASK",
+                "MESSAGE_TYPES_CONNECTION",
+                "MESSAGE_TYPES_SUBSCRIPTION",
+                "MESSAGE_TYPES_REGISTRATION",
+                "MESSAGE_TYPES_SYSTEM",
+                "MESSAGE_TYPES_EVENT",
+                "MESSAGE_TYPES_UNRECOGNIZED"
+            ]
+        },
+        "types.RECIPIENT_TYPES": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "x-enum-varnames": [
+                "RECIPIENT_TYPES_UNSPECIFIED",
+                "RECIPIENT_TYPES_SERVER",
+                "RECIPIENT_TYPES_CLIENT",
+                "RECIPIENT_TYPES_INDIVIDUAL",
+                "RECIPIENT_TYPES_GROUP",
+                "RECIPIENT_TYPES_UNRECOGNIZED"
+            ]
+        },
+        "types.STAGE_TYPES": {
+            "type": "integer",
+            "enum": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "x-enum-varnames": [
+                "STAGE_TYPES_UNSPECIFIED",
+                "STAGE_TYPES_DEVELOPMENT",
+                "STAGE_TYPES_STAGING",
+                "STAGE_TYPES_PRODUCTION",
+                "STAGE_TYPES_UNRECOGNIZED"
             ]
         }
     }

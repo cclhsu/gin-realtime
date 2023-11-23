@@ -83,12 +83,22 @@ func SetupRestfulWebsocketClientRoutes(ctx context.Context, r *gin.Engine, host 
 		healthGroup.GET("/ready", healthController.IsReady)
 	}
 
-	websocketGroup := r.Group("/websocket")
+	// handle socket response from server
+	// websocketClientGroup := r.Group("/api/v1/websocket-client")
+	websocketGroup := r.Group("/websocket-client")
 	{
-		// Get health check
-		websocketGroup.GET("/health", websocketClientController.Health)
+		// websocketGroup.Use(middleware.WebsocketMiddleware())
 
 		// Send message to server
-		websocketGroup.GET("/trigger", websocketClientController.Trigger)
+		websocketGroup.POST("/message/send", websocketClientController.Send)
+
+		// // Receive a Message from a websocket
+		// websocketGroup.POST("/message/receive", websocketClientController.Receive)
+
+		// // List all Messages
+		// websocketGroup.GET("/message", websocketClientController.ListMessages)
+
+		// Get health check
+		websocketGroup.GET("/health", websocketClientController.Health)
 	}
 }

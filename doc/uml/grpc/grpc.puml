@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class GrpcServer
+' class GrpcClient
+
+' User --> Service : Register Grpc
+' Service --> GrpcServer : POST /grpcs
+' GrpcServer --> Service : 201 Created or Error
+' Service --> GrpcServer : POST /grpcs/{grpc_id}/payloads
+' GrpcServer --> Service : Deliver Payload
+' User --> Service : Disconnect Grpc
+' Service --> GrpcServer : DELETE /grpcs/{grpc_id}
+' GrpcServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Grpc Server" as GrpcServer {
+    class GrpcServerController {
+        + GET /health: string
+    }
+
+    ' class GrpcServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class GrpcServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' GrpcServerController --> GrpcServerService : Register Grpc
+    ' GrpcServerService --> GrpcServerRepository : Register Grpc
+    ' GrpcServerRepository --> GrpcServerService : 201 Created or Error
+    ' GrpcServerService --> GrpcServerController : 201 Created or Error
+
+    ' GrpcServerController --> GrpcServerService : Deliver Payload
+    ' GrpcServerService --> GrpcServerRepository : Deliver Payload
+    ' GrpcServerRepository --> GrpcServerService : 200 OK or Error
+    ' GrpcServerService --> GrpcServerController : 200 OK or Error
+
+    ' GrpcServerController --> GrpcServerService : Disconnect Grpc
+    ' GrpcServerService --> GrpcServerRepository : Disconnect Grpc
+    ' GrpcServerRepository --> GrpcServerService : 204 No Content or Error
+    ' GrpcServerService --> GrpcServerController : 204 No Content or Error
+}
+
+package "Grpc Clients" as GrpcClients {
+    package "Grpc Client 1" as GrpcClient1 {
+        class GrpcClient1Controller {
+            + GET /health: string
+        }
+
+        ' class GrpcClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GrpcClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Register Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Register Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 201 Created or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 201 Created or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Send Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Send Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Receive Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Receive Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Disconnect Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Disconnect Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 204 No Content or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 204 No Content or Error
+    }
+
+    package "Grpc Client 2" as GrpcClient2 {
+        class GrpcClient2Controller {
+            + GET /health: string
+        }
+
+        ' class GrpcClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GrpcClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Register Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Register Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 201 Created or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 201 Created or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Send Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Send Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Receive Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Receive Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Disconnect Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Disconnect Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 204 No Content or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 204 No Content or Error
+    }
+
+    package "Grpc Client 3" as GrpcClient3 {
+        class GrpcClient3Controller {
+            + GET /health: string
+        }
+
+        ' class GrpcClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class GrpcClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Register Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Register Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 201 Created or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 201 Created or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Send Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Send Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Receive Payload
+        ' GrpcClient1Service --> GrpcClient1Repository : Receive Payload
+        ' GrpcClient1Repository --> GrpcClient1Service : 200 OK or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 200 OK or Error
+
+        ' GrpcClient1Controller --> GrpcClient1Service : Disconnect Grpc
+        ' GrpcClient1Service --> GrpcClient1Repository : Disconnect Grpc
+        ' GrpcClient1Repository --> GrpcClient1Service : 204 No Content or Error
+        ' GrpcClient1Service --> GrpcClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: GrpcPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> GrpcServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackGrpcPerformance(grpcId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logGrpcEvent(eventData: GrpcEvent): void
+'     }
+
+'     ' MonitoringService --> GrpcServer : trackGrpcPerformance()
+'     ' LoggingService --> GrpcServer : logGrpcEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: GrpcEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> GrpcServer : trackEvent()
+' }
+
+GrpcClient1 --> GrpcServer : POST /grpcs
+GrpcClient2 --> GrpcServer : POST /grpcs
+GrpcClient3 --> GrpcServer : POST /grpcs
+
+GrpcServer --> GrpcClient1 : 201 Created or Error
+GrpcServer --> GrpcClient2 : 201 Created or Error
+GrpcServer --> GrpcClient3 : 201 Created or Error
+
+GrpcClient1 --> GrpcServer : POST /grpcs/{grpc_id}/payloads
+GrpcClient2 --> GrpcServer : POST /grpcs/{grpc_id}/payloads
+GrpcClient3 --> GrpcServer : POST /grpcs/{grpc_id}/payloads
+
+GrpcServer --> GrpcClient1 : Deliver Payload
+GrpcServer --> GrpcClient2 : Deliver Payload
+GrpcServer --> GrpcClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> GrpcServer : Track Grpc Performance
+' LoggingService --> GrpcServer : Log Grpc Event
+' EventTrackingService --> GrpcServer : Track Event
+
+@enduml

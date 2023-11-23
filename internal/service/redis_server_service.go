@@ -10,13 +10,13 @@ type RedisServerInterface interface {
 }
 
 type RedisServerService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewRedisServerService(ctx context.Context, logger *logrus.Logger) *RedisServerService {
 	return &RedisServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

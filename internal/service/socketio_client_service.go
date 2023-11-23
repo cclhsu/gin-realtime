@@ -10,10 +10,10 @@ import (
 
 type SocketIOClientInterface interface {
 	NewSocketIOClientService(ctx context.Context, logger *logrus.Logger) *SocketIOClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewSocketIOClientService(ctx context.Context, logger *logrus.Logger) *Socke
 	}
 }
 
-func (scs *SocketIOClientService) Initialize() {
+func (scs *SocketIOClientService) Initialize() error {
 	scs.logger.Info("SocketIOClientService Initialize")
 	scs.socketIOServerServiceURL = scs.initializeSocketIOServerServiceURLL()
 	scs.logger.Infof("SOCKET_IO Server URL: %s\n", scs.socketIOServerServiceURL)
+	return nil
 }
 
 func (scs *SocketIOClientService) initializeSocketIOServerServiceURLL() string {
@@ -47,7 +48,7 @@ func (scs *SocketIOClientService) initializeSocketIOServerServiceURLL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/socket-io/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (scs *SocketIOClientService) Connection() error {
@@ -60,8 +61,8 @@ func (scs *SocketIOClientService) Disconnection() error {
 	return nil
 }
 
-func (scs *SocketIOClientService) Trigger(message string) (string, error) {
-	scs.logger.Info("SocketIOClientService Trigger")
+func (scs *SocketIOClientService) Send(message string) (string, error) {
+	scs.logger.Info("SocketIOClientService Send")
 	return "", nil
 }
 
@@ -73,4 +74,9 @@ func (scs *SocketIOClientService) Echo() (string, error) {
 func (scs *SocketIOClientService) Broadcast() (string, error) {
 	scs.logger.Info("SocketIOClientService Broadcast")
 	return "", nil
+}
+
+func (scs *SocketIOClientService) Health() string {
+	scs.logger.Info("SocketIOClientService Health")
+	return "OK"
 }

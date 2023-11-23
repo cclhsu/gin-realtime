@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Server-Sent Events Client</title>
+</head>
+
+<body>
+    <h1>Server-Sent Events Client</h1>
+    <div>
+        <label for="startButton">Start Receiving Events:</label>
+        <button id="startButton">Start</button>
+    </div>
+
+    <h2>Events:</h2>
+    <ul id="eventList"></ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const startButton = document.getElementById("startButton");
+            const eventList = document.getElementById("eventList");
+            let eventSource;
+
+            startButton.addEventListener("click", function () {
+                if (!eventSource) {
+                    eventSource = new EventSource("/events");
+
+                    eventSource.onopen = function () {
+                        startButton.textContent = "Stop";
+                    };
+
+                    eventSource.onmessage = function (event) {
+                        const newEvent = document.createElement("li");
+                        newEvent.textContent = event.data;
+                        eventList.appendChild(newEvent);
+                    };
+
+                    eventSource.onerror = function (error) {
+                        console.error("SSE Error:", error);
+                        startButton.textContent = "Start";
+                        eventSource.close();
+                        eventSource = null;
+                    };
+                } else {
+                    startButton.textContent = "Start";
+                    eventSource.close();
+                    eventSource = null;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

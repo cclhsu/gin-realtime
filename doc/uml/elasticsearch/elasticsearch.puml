@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class WebsocketServer
+' class WebsocketClient
+
+' User --> Service : Register Websocket
+' Service --> WebsocketServer : POST /websockets
+' WebsocketServer --> Service : 201 Created or Error
+' Service --> WebsocketServer : POST /websockets/{websocket_id}/payloads
+' WebsocketServer --> Service : Deliver Payload
+' User --> Service : Disconnect Websocket
+' Service --> WebsocketServer : DELETE /websockets/{websocket_id}
+' WebsocketServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Websocket Server" as WebsocketServer {
+    class WebsocketServerController {
+        + GET /health: string
+    }
+
+    ' class WebsocketServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class WebsocketServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' WebsocketServerController --> WebsocketServerService : Register Websocket
+    ' WebsocketServerService --> WebsocketServerRepository : Register Websocket
+    ' WebsocketServerRepository --> WebsocketServerService : 201 Created or Error
+    ' WebsocketServerService --> WebsocketServerController : 201 Created or Error
+
+    ' WebsocketServerController --> WebsocketServerService : Deliver Payload
+    ' WebsocketServerService --> WebsocketServerRepository : Deliver Payload
+    ' WebsocketServerRepository --> WebsocketServerService : 200 OK or Error
+    ' WebsocketServerService --> WebsocketServerController : 200 OK or Error
+
+    ' WebsocketServerController --> WebsocketServerService : Disconnect Websocket
+    ' WebsocketServerService --> WebsocketServerRepository : Disconnect Websocket
+    ' WebsocketServerRepository --> WebsocketServerService : 204 No Content or Error
+    ' WebsocketServerService --> WebsocketServerController : 204 No Content or Error
+}
+
+package "Websocket Clients" as WebsocketClients {
+    package "Websocket Client 1" as WebsocketClient1 {
+        class WebsocketClient1Controller {
+            + GET /health: string
+        }
+
+        ' class WebsocketClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebsocketClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Register Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Register Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 201 Created or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 201 Created or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Send Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Send Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Receive Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Receive Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Disconnect Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Disconnect Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 204 No Content or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 204 No Content or Error
+    }
+
+    package "Websocket Client 2" as WebsocketClient2 {
+        class WebsocketClient2Controller {
+            + GET /health: string
+        }
+
+        ' class WebsocketClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebsocketClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Register Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Register Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 201 Created or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 201 Created or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Send Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Send Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Receive Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Receive Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Disconnect Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Disconnect Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 204 No Content or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 204 No Content or Error
+    }
+
+    package "Websocket Client 3" as WebsocketClient3 {
+        class WebsocketClient3Controller {
+            + GET /health: string
+        }
+
+        ' class WebsocketClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class WebsocketClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Register Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Register Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 201 Created or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 201 Created or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Send Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Send Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Receive Payload
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Receive Payload
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 200 OK or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 200 OK or Error
+
+        ' WebsocketClient1Controller --> WebsocketClient1Service : Disconnect Websocket
+        ' WebsocketClient1Service --> WebsocketClient1Repository : Disconnect Websocket
+        ' WebsocketClient1Repository --> WebsocketClient1Service : 204 No Content or Error
+        ' WebsocketClient1Service --> WebsocketClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: WebsocketPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> WebsocketServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackWebsocketPerformance(websocketId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logWebsocketEvent(eventData: WebsocketEvent): void
+'     }
+
+'     ' MonitoringService --> WebsocketServer : trackWebsocketPerformance()
+'     ' LoggingService --> WebsocketServer : logWebsocketEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: WebsocketEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> WebsocketServer : trackEvent()
+' }
+
+WebsocketClient1 --> WebsocketServer : POST /websockets
+WebsocketClient2 --> WebsocketServer : POST /websockets
+WebsocketClient3 --> WebsocketServer : POST /websockets
+
+WebsocketServer --> WebsocketClient1 : 201 Created or Error
+WebsocketServer --> WebsocketClient2 : 201 Created or Error
+WebsocketServer --> WebsocketClient3 : 201 Created or Error
+
+WebsocketClient1 --> WebsocketServer : POST /websockets/{websocket_id}/payloads
+WebsocketClient2 --> WebsocketServer : POST /websockets/{websocket_id}/payloads
+WebsocketClient3 --> WebsocketServer : POST /websockets/{websocket_id}/payloads
+
+WebsocketServer --> WebsocketClient1 : Deliver Payload
+WebsocketServer --> WebsocketClient2 : Deliver Payload
+WebsocketServer --> WebsocketClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> WebsocketServer : Track Websocket Performance
+' LoggingService --> WebsocketServer : Log Websocket Event
+' EventTrackingService --> WebsocketServer : Track Event
+
+@enduml

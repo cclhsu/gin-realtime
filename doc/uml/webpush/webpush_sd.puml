@@ -1,0 +1,13 @@
+@startuml WebPushSequenceDiagram
+
+actor User as "Subscriber"
+participant Service as "Push Service"
+participant Application as "Web Application"
+
+User -> Service: Subscribe to Push
+Service --> User: Subscription Acknowledgment
+
+User -> Application: Visit the Website
+User -> Service: Receive a Push Notification
+
+@enduml

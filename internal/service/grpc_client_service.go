@@ -10,10 +10,10 @@ import (
 
 type GrpcClientInterface interface {
 	NewGrpcClientService(ctx context.Context, logger *logrus.Logger) *GrpcClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewGrpcClientService(ctx context.Context, logger *logrus.Logger) *GrpcClien
 	}
 }
 
-func (gcs *GrpcClientService) Initialize() {
+func (gcs *GrpcClientService) Initialize() error {
 	gcs.logger.Info("GrpcClientService Initialize")
 	gcs.grpcServerServiceURL = gcs.initializeGrpcServerServiceURL()
 	gcs.logger.Infof("Grpc Server URL: %s\n", gcs.grpcServerServiceURL)
+	return nil
 }
 
 func (gcs *GrpcClientService) initializeGrpcServerServiceURL() string {
@@ -47,7 +48,7 @@ func (gcs *GrpcClientService) initializeGrpcServerServiceURL() string {
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/grpc/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (gcs *GrpcClientService) Connection() error {
@@ -60,8 +61,8 @@ func (gcs *GrpcClientService) Disconnection() error {
 	return nil
 }
 
-func (gcs *GrpcClientService) Trigger(message string) (string, error) {
-	gcs.logger.Info("GrpcClientService Trigger")
+func (gcs *GrpcClientService) Send(message string) (string, error) {
+	gcs.logger.Info("GrpcClientService Send")
 	return "", nil
 }
 

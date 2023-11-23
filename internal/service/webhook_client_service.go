@@ -4,29 +4,32 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"time"
 
+	_interface "github.com/cclhsu/gin-realtime/internal/interface"
 	"github.com/cclhsu/gin-realtime/internal/model"
+	"github.com/cclhsu/gin-realtime/internal/types"
 	"github.com/cclhsu/gin-realtime/internal/utils"
 	"github.com/google/uuid"
 
-	// "github.com/cclhsu/gin-realtime/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
 type WebhookClientInterface interface {
-	RegisterWebhook(webhookData model.WebhookInfoDTO) (model.WebhookRegistrationResponseDTO, error)
-	TriggerEvent(eventDataDTO model.EventDataDTO) (model.EventDataResponseDTO, error)
-	HandleTriggeredEvent(eventDataDTO model.EventDataDTO) (model.EventDataResponseDTO, error)
-	ListRegisteredWebhooks() ([]model.WebhookInfoDTO, error)
-	DisconnectWebhook(webhookId string) (model.WebhookRegistrationResponseDTO, error)
+	NewWebhookClientService(ctx context.Context, logger *logrus.Logger) *WebhookClientService
+	_interface.RegistrationServiceInterface
+	_interface.MessageServiceInterface
+	// _interface.HealthServiceInterface
+	Initialize() error
+	initializeWebhookServerServiceURL() string
+	initializeWebhookClientURL() string
 }
 
 type WebhookClientService struct {
 	ctx                     context.Context
 	logger                  *logrus.Logger
 	webhookServerServiceURL string
-	// registeredWebhooks []model.WebhookInfoDTO
+	clientID                string
+	registeredWebhooks      []model.RegistrationDTO
 }
 
 func NewWebhookClientService(ctx context.Context, logger *logrus.Logger) *WebhookClientService {
@@ -36,29 +39,35 @@ func NewWebhookClientService(ctx context.Context, logger *logrus.Logger) *Webhoo
 	}
 }
 
-func (wcs *WebhookClientService) Initialize() {
+func (wcs *WebhookClientService) Initialize() error {
 	wcs.logger.Info("WebhookClientService Initialize")
-	wcs.webhookServerServiceURL = wcs.initializewebhookServerServiceURL()
+	wcs.webhookServerServiceURL = wcs.initializeWebhookServerServiceURL()
 	wcs.logger.Infof("Webhook Server URL: %s\n", wcs.webhookServerServiceURL)
 
-	webhookData := model.WebhookInfoDTO{
-		ID:         uuid.New().String(),
-		URL:        wcs.initializeWebhookClientURL(),
-		ExpiryDate: time.Now(),
-		Config: model.WebhookConfigDTO{
-			Secret:   "1234567890",
-			IsActive: true,
-			Type:     model.Test,
-		},
+	wcs.clientID = uuid.New().String()
+	webhookRegistration := model.RegistrationDTO{
+		UUID:        wcs.clientID,
+		Type:        types.MESSAGE_TYPES_REGISTRATION,
+		Stage:       types.STAGE_TYPES_UNSPECIFIED,
+		Environment: types.ENVIRONMENT_TYPES_UNSPECIFIED,
+		Sender:      wcs.clientID,
+		// Timestamp:     time.Now(),
+		CallbackURL:   wcs.initializeWebhookClientURL(),
+		Subscriptions: []string{},
+		// Expires:       time.Now().Add(1 * time.Hour * 24 * 7), // 1 week
+		Secret: "1234567890",
+		State:  types.GENERAL_STATE_TYPES_UNSPECIFIED,
 	}
-	// wcs.registeredWebhooks = []model.WebhookInfoDTO{
-	//	webhookData,
-	// }
+
+	wcs.registeredWebhooks = []model.RegistrationDTO{
+		webhookRegistration,
+	}
 	// Initialize webhook server URL and register the webhook
-	wcs.RegisterWebhook(webhookData)
+	wcs.Register(webhookRegistration)
+	return nil
 }
 
-func (wcs *WebhookClientService) initializewebhookServerServiceURL() string {
+func (wcs *WebhookClientService) initializeWebhookServerServiceURL() string {
 	SERVER_HOST := os.Getenv("SERVER_HOST")
 	if SERVER_HOST == "" {
 		SERVER_HOST = "0.0.0.0"
@@ -79,87 +88,163 @@ func (wcs *WebhookClientService) initializeWebhookClientURL() string {
 	if CLIENT_PORT == "" {
 		CLIENT_PORT = "3002"
 	}
-	return fmt.Sprintf("http://%s:%s/webhook-client/handle-payload", CLIENT_HOST, CLIENT_PORT)
+	return fmt.Sprintf("http://%s:%s/webhook-client/message/receive", CLIENT_HOST, CLIENT_PORT)
 }
 
-func (wcs *WebhookClientService) RegisterWebhook(webhookData model.WebhookInfoDTO) (model.WebhookRegistrationResponseDTO, error) {
-	wcs.logger.Infof("Registering webhook: %+v\n", webhookData)
+func (wcs *WebhookClientService) Register(registration model.RegistrationDTO) (model.RegistrationResponseDTO, error) {
+	wcs.logger.Infof("Registering webhook: %+v\n", registration)
 
-	// Simulate sending the request
-	// In a real implementation, you would make an HTTP POST request here
-	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register", "POST", webhookData)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register", "POST", registration)
 	if err != nil {
 		wcs.logger.Errorf("Webhook registration error: %s\n", err.Error())
-		return model.WebhookRegistrationResponseDTO{}, err
+		return model.RegistrationResponseDTO{}, err
 	}
 
-	regResponse, ok := response.(model.WebhookRegistrationResponseDTO)
-	if !ok {
-		return model.WebhookRegistrationResponseDTO{}, fmt.Errorf("unexpected response type: %T", response)
+	regResponse, ok := model.ConvertToRegistrationResponseDTO(response)
+	if ok != nil {
+		wcs.logger.Errorf("unexpected response type: %T\n", response)
+		return model.RegistrationResponseDTO{}, fmt.Errorf("unexpected response type: %T", response)
 	}
 
 	wcs.logger.Infof("Webhook registration response: %+v\n", regResponse)
 	return regResponse, nil
 }
 
-func (wcs *WebhookClientService) TriggerEvent(eventDataDTO model.EventDataDTO) (model.EventDataResponseDTO, error) {
-	wcs.logger.Infof("Triggering event: %+v\n", eventDataDTO)
+func (wcs *WebhookClientService) Unregister(registrationID string) error {
+	wcs.logger.Infof("Unregistering webhook: %+v\n", registrationID)
 
-	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/handle-event", "POST", eventDataDTO)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register/"+registrationID, "DELETE", nil)
 	if err != nil {
-		wcs.logger.Errorf("Event triggering error: %s\n, %+v", err.Error(), response)
-		return model.EventDataResponseDTO{}, err
+		wcs.logger.Errorf("Webhook unregistration error: %s\n", err.Error())
+		return err
 	}
 
-	wcs.logger.Infof("Event triggering response: %+v\n", response)
-
-	eventDataResponse, ok := response.(model.EventDataResponseDTO)
-	if !ok {
-		wcs.logger.Errorf("unexpected response type: %T\n, %+v", response, response)
-		return model.EventDataResponseDTO{}, fmt.Errorf("unexpected response type: %T", response)
-	}
-
-	return eventDataResponse, nil
+	wcs.logger.Infof("Webhook unregistration response: %+v\n", response)
+	return nil
 }
 
-func (wcs *WebhookClientService) HandleTriggeredEvent(eventDataDTO model.EventDataDTO) (model.EventDataResponseDTO, error) {
-	wcs.logger.Infof("Handling triggered event: %+v\n", eventDataDTO)
+func (wcs *WebhookClientService) ListRegistrations() ([]model.RegistrationDTO, error) {
+	wcs.logger.Infof("Listing registered webhooks")
 
-	return model.EventDataResponseDTO{
-		Success: true,
-		Message: fmt.Sprintf("Event %s handled successfully", eventDataDTO.ID),
-		Data:    nil,
-	}, nil
-}
-
-func (ws *WebhookClientService) ListRegisteredWebhooks() ([]model.WebhookInfoDTO, error) {
-	ws.logger.Infof("Listing registered webhooks\n")
-
-	response, err := utils.SendRequest(ws.logger, ws.webhookServerServiceURL+"/list", "GET", nil)
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register", "GET", nil)
 	if err != nil {
-		ws.logger.Errorf("Webhook listing error: %s\n", err.Error())
+		wcs.logger.Errorf("Webhook listing error: %s\n", err.Error())
 		return nil, err
 	}
+	wcs.logger.Infof("Webhook listing response: %+v\n", response)
 
-	webhookList, ok := response.([]model.WebhookInfoDTO)
-	if !ok {
-		ws.logger.Errorf("unexpected response type: %T\n", webhookList)
-		return nil, fmt.Errorf("unexpected response type: %T", response)
+	// Type assertion to get the underlying slice
+	var registrations []model.RegistrationDTO
+	if responseSlice, ok := response.([]interface{}); ok {
+		// Convert []interface{} to []model.RegistrationDTO
+		for _, item := range responseSlice {
+			registration, err := model.ConvertToRegistrationDTO(item)
+			if err != nil {
+				fmt.Println("Error converting to RegistrationDTO:", err)
+				return nil, err
+			}
+			registrations = append(registrations, registration)
+		}
+
+		// Now registrations is []model.RegistrationDTO
+		fmt.Println(registrations)
+		wcs.registeredWebhooks = registrations
+	} else if responseSlice, ok := response.([]model.RegistrationDTO); ok {
+		// Type assertion to get the underlying slice
+		wcs.registeredWebhooks = responseSlice
+	} else {
+		wcs.logger.Errorf("Unexpected type in Webhook listing response: %T", response)
+		return nil, fmt.Errorf("Unexpected type in Webhook listing response: %T", response)
 	}
 
-	ws.logger.Infof("Webhook listing response: %+v\n", webhookList)
-	return webhookList, nil
+	wcs.logger.Infof("Webhook listing response: %+v\n", wcs.registeredWebhooks)
+	return wcs.registeredWebhooks, nil
 }
 
-func (wcs *WebhookClientService) DisconnectWebhook(webhookID string) (model.WebhookRegistrationResponseDTO, error) {
-	wcs.logger.Infof("Disconnecting webhook: %s\n", webhookID)
+func (wcs *WebhookClientService) UpdateRegistration(registrationID string, request model.RegistrationDTO) (model.RegistrationResponseDTO, error) {
+	wcs.logger.Infof("Updating webhook: %+v\n", registrationID)
 
-	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/unregister/"+webhookID, "DELETE", nil)
-	if err != nil {
-		wcs.logger.Errorf("Webhook disconnection error: %s\n", err.Error())
-		return model.WebhookRegistrationResponseDTO{}, err
+	request = model.RegistrationDTO{
+		UUID:        registrationID,
+		Type:        types.MESSAGE_TYPES_REGISTRATION,
+		Stage:       types.STAGE_TYPES_UNSPECIFIED,
+		Environment: types.ENVIRONMENT_TYPES_UNSPECIFIED,
+		Sender:      registrationID,
+		// Timestamp:     time.Now(),
+		CallbackURL:   wcs.initializeWebhookClientURL(),
+		Subscriptions: []string{},
+		// Expires:       time.Now().Add(1 * time.Hour * 24 * 7), // 1 week
 	}
 
-	wcs.logger.Infof("Webhook disconnection response: %+v\n", response)
-	return response.(model.WebhookRegistrationResponseDTO), nil
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/register/"+registrationID, "PUT", request)
+	if err != nil {
+		wcs.logger.Errorf("Webhook update error: %s\n", err.Error())
+		return model.RegistrationResponseDTO{}, err
+	}
+
+	wcs.logger.Infof("Webhook update response: %+v\n", response)
+	return response.(model.RegistrationResponseDTO), nil
+}
+
+func (wcs *WebhookClientService) Send(message model.MessageDTO) error {
+	wcs.logger.Infof("Sending message: %+v\n", message)
+
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/message/send", "POST", message)
+	if err != nil {
+		wcs.logger.Errorf("Message sending error: %s\n", err.Error())
+		return err
+	}
+
+	wcs.logger.Infof("Message sending response: %+v\n", response)
+	return nil
+}
+
+func (wcs *WebhookClientService) Receive(message model.MessageDTO) error {
+	wcs.logger.Infof("Receiving message: %+v\n", message)
+
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/message/receive", "POST", message)
+	if err != nil {
+		wcs.logger.Errorf("Message receiving error: %s\n", err.Error())
+		return err
+	}
+
+	wcs.logger.Infof("Message receiving response: %+v\n", response)
+	return nil
+}
+
+func (wcs *WebhookClientService) ListMessages() ([]model.MessageDTO, error) {
+	wcs.logger.Infof("Listing messages")
+
+	response, err := utils.SendRequest(wcs.logger, wcs.webhookServerServiceURL+"/message", "GET", nil)
+	if err != nil {
+		wcs.logger.Errorf("Message listing error: %s\n", err.Error())
+		return nil, err
+	}
+	wcs.logger.Infof("Message listing response: %+v\n", response)
+
+	// Type assertion to get the underlying slice
+	var messageList []model.MessageDTO
+	if responseSlice, ok := response.([]interface{}); ok {
+		// Convert []interface{} to []model.MessageDTO
+		for _, item := range responseSlice {
+			message, err := model.ConvertToMessageDTO(item)
+			if err != nil {
+				fmt.Println("Error converting to MessageDTO:", err)
+				return nil, err
+			}
+			messageList = append(messageList, message)
+		}
+
+		// Now messageList is []model.MessageDTO
+		fmt.Println(messageList)
+	} else if responseSlice, ok := response.([]model.MessageDTO); ok {
+		// Type assertion to get the underlying slice
+		messageList = responseSlice
+	} else {
+		wcs.logger.Errorf("Unexpected type in Message listing response: %T", response)
+		return nil, fmt.Errorf("Unexpected type in Message listing response: %T", response)
+	}
+
+	wcs.logger.Infof("Message listing response: %+v\n", messageList)
+	return messageList, nil
 }

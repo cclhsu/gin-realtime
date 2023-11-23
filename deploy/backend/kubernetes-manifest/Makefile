@@ -1,51 +1,82 @@
-#*******************************************************************************
+# *******************************************************************************
 # MAKEFILE_TYPE :=
-# Makefile for {{ projectName }}/{{ projectType }}
-#*******************************************************************************
+# Makefile for {{ GITHUB_PROJECT }}/{{ PROJECT_TYPE }}
+# - [](<https://www.gnu.org/software/make/manual/make.html>)
+# - [](<https://www.gnu.org/software/make/manual/html_node/Simple-Makefile.html>)
+# *******************************************************************************
 # Purpose:
 #	This script is used to build, test, and deploy the project.
-#*******************************************************************************
+# *******************************************************************************
 # Usage:
 #	make [target]
-#*******************************************************************************
+# *******************************************************************************
 # History:
 #	2021/09/01	Clark Hsu  First release
-#*******************************************************************************
-#*******************************************************************************
+# *******************************************************************************
+# *******************************************************************************
 # Variables
-TOP_DIR=$(shell dirname $(abspath $(firstword $(MAKEFILE_LIST))))
-GIT_PROVIDER := {{ gitProvider }}
-PORJECGT_USER := {{ projectUser }}
-PROJECT_NAME := {{ projectName }}
-NAMESPACE := "{{ projectName }}"
-LABEL := {{ projectName }}
-CONTEXT := {{ context }}
+# TOP_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+TOP_DIR := $(shell dirname $(abspath $(firstword $(MAKEFILE_LIST))))
+TARGETS := $(shell ls -p scripts | grep -v /)
+GIT_PROVIDER := {{ GIT_PROVIDER }}
+GITHUB_USER := {{ GITHUB_USER }}
+GITHUB_PROJECT := {{ GITHUB_PROJECT }}
+NAMESPACE := "{{ GITHUB_PROJECT }}"
+LABEL := {{ GITHUB_PROJECT }}
+CONTEXT := {{ CONTEXT }}
 
 NAMESPACE := "default"
-LABEL := "io.kompose.service={{ projectName }}"
+LABEL := "io.kompose.service={{ GITHUB_PROJECT }}"
 POD_NAME := $(shell kubectl get pods -l ${LABEL} -n $(NAMESPACE) -o jsonpath='{range .items[*]}{.metadata.name}')
 CONTAINER_HOST := 0.0.0.0
-CONTAINER_PORT := {{ projectPort }}
+CONTAINER_PORT := {{ SERVICE_PORT }}
 
-#*******************************************************************************
-#*******************************************************************************
+# *******************************************************************************
+# *******************************************************************************
 # Functions
-#*******************************************************************************
-#*******************************************************************************
+# *******************************************************************************
+# *******************************************************************************
 # Main
-#*******************************************************************************
+# *******************************************************************************
 # INTERNAL VARIABLES
 # Read all subsequent tasks as arguments of the first task
 RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 $(eval $(args) $(RUN_ARGS):;@:)
-#*******************************************************************************
+# *******************************************************************************
 .DEFAULT_GOAL := help
 
 .PHONY: help
-help:
+help:  ## Help
 	@echo "Usage: make [target]"
 	@echo "Targets:"
 	@grep -E '^[0-9a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf " \033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: all
+all:  ## all
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo -e "\n>>> ...\n"
+	@# make clean
+	make build
+	@# make status
+	@# make version
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: $(TARGETS)
+$(TARGETS):	 ## Run the function
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo ">>> targets ..."
+	@ls -p scripts | grep -v / | xargs -I {} chmod +x scripts/{}
+	@./scripts/$@
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
+.PHONY: func_list
+func_list:	## List all functions
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo ">>> targets ..."
+	@for TARGET in $(TARGETS); do \
+		echo $$TARGET; \
+	done
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
 .PHONY: init
 init:  ## Initialize the project
@@ -71,6 +102,13 @@ build:	## Build the project
 	@echo "Build the project"
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
+.PHONY: nocache
+nocache:  ## nocache
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo -e "\n>>> nocache...\n"
+	$(TOP_DIR)/$(GITHUB_PROJECT)
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
 .PHONY: start
 start:	## Start the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
@@ -89,10 +127,20 @@ bash:  ## Bash the project
 	@echo "Bash the project"
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
+.PHONY: logs
+logs:  ## logs
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
+	@echo -e "\n>>> logs...\n"
+	@# make clean
+	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
+
 .PHONY: status
 status:	 ## Status the project
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ..."
 	@echo "Status the project"
+	@echo ">>> $(TOP_DIR)..."
+	@echo ">>> $(GITHUB_USER)/$(GITHUB_PROJECT)/$(PACKAGE_VERSION)..."
+	@echo ">>> $(DISTRO)/$(OS)/$(ARCH)..."
 	# kubectl get all -o wide --show-labels # -A
 	@echo ">>> Getting kubectl pod status..."
 	kubectl get pods -o wide --show-labels # --all-namespaces
@@ -194,6 +242,6 @@ clean:	## Clean the project
 	@echo "Clean the project"
 	@echo ">>> [$$(date +'%Y-%m-%d %H:%M:%S')] $@ ... Done"
 
-#*******************************************************************************
+# *******************************************************************************
 # EOF
-#*******************************************************************************
+# *******************************************************************************

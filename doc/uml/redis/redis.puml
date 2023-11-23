@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class RedisServer
+' class RedisClient
+
+' User --> Service : Register Redis
+' Service --> RedisServer : POST /rediss
+' RedisServer --> Service : 201 Created or Error
+' Service --> RedisServer : POST /rediss/{redis_id}/payloads
+' RedisServer --> Service : Deliver Payload
+' User --> Service : Disconnect Redis
+' Service --> RedisServer : DELETE /rediss/{redis_id}
+' RedisServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "Redis Server" as RedisServer {
+    class RedisServerController {
+        + GET /health: string
+    }
+
+    ' class RedisServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class RedisServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' RedisServerController --> RedisServerService : Register Redis
+    ' RedisServerService --> RedisServerRepository : Register Redis
+    ' RedisServerRepository --> RedisServerService : 201 Created or Error
+    ' RedisServerService --> RedisServerController : 201 Created or Error
+
+    ' RedisServerController --> RedisServerService : Deliver Payload
+    ' RedisServerService --> RedisServerRepository : Deliver Payload
+    ' RedisServerRepository --> RedisServerService : 200 OK or Error
+    ' RedisServerService --> RedisServerController : 200 OK or Error
+
+    ' RedisServerController --> RedisServerService : Disconnect Redis
+    ' RedisServerService --> RedisServerRepository : Disconnect Redis
+    ' RedisServerRepository --> RedisServerService : 204 No Content or Error
+    ' RedisServerService --> RedisServerController : 204 No Content or Error
+}
+
+package "Redis Clients" as RedisClients {
+    package "Redis Client 1" as RedisClient1 {
+        class RedisClient1Controller {
+            + GET /health: string
+        }
+
+        ' class RedisClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class RedisClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' RedisClient1Controller --> RedisClient1Service : Register Redis
+        ' RedisClient1Service --> RedisClient1Repository : Register Redis
+        ' RedisClient1Repository --> RedisClient1Service : 201 Created or Error
+        ' RedisClient1Service --> RedisClient1Controller : 201 Created or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Send Payload
+        ' RedisClient1Service --> RedisClient1Repository : Send Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Receive Payload
+        ' RedisClient1Service --> RedisClient1Repository : Receive Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Disconnect Redis
+        ' RedisClient1Service --> RedisClient1Repository : Disconnect Redis
+        ' RedisClient1Repository --> RedisClient1Service : 204 No Content or Error
+        ' RedisClient1Service --> RedisClient1Controller : 204 No Content or Error
+    }
+
+    package "Redis Client 2" as RedisClient2 {
+        class RedisClient2Controller {
+            + GET /health: string
+        }
+
+        ' class RedisClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class RedisClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' RedisClient1Controller --> RedisClient1Service : Register Redis
+        ' RedisClient1Service --> RedisClient1Repository : Register Redis
+        ' RedisClient1Repository --> RedisClient1Service : 201 Created or Error
+        ' RedisClient1Service --> RedisClient1Controller : 201 Created or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Send Payload
+        ' RedisClient1Service --> RedisClient1Repository : Send Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Receive Payload
+        ' RedisClient1Service --> RedisClient1Repository : Receive Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Disconnect Redis
+        ' RedisClient1Service --> RedisClient1Repository : Disconnect Redis
+        ' RedisClient1Repository --> RedisClient1Service : 204 No Content or Error
+        ' RedisClient1Service --> RedisClient1Controller : 204 No Content or Error
+    }
+
+    package "Redis Client 3" as RedisClient3 {
+        class RedisClient3Controller {
+            + GET /health: string
+        }
+
+        ' class RedisClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class RedisClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' RedisClient1Controller --> RedisClient1Service : Register Redis
+        ' RedisClient1Service --> RedisClient1Repository : Register Redis
+        ' RedisClient1Repository --> RedisClient1Service : 201 Created or Error
+        ' RedisClient1Service --> RedisClient1Controller : 201 Created or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Send Payload
+        ' RedisClient1Service --> RedisClient1Repository : Send Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Receive Payload
+        ' RedisClient1Service --> RedisClient1Repository : Receive Payload
+        ' RedisClient1Repository --> RedisClient1Service : 200 OK or Error
+        ' RedisClient1Service --> RedisClient1Controller : 200 OK or Error
+
+        ' RedisClient1Controller --> RedisClient1Service : Disconnect Redis
+        ' RedisClient1Service --> RedisClient1Repository : Disconnect Redis
+        ' RedisClient1Repository --> RedisClient1Service : 204 No Content or Error
+        ' RedisClient1Service --> RedisClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: RedisPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> RedisServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackRedisPerformance(redisId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logRedisEvent(eventData: RedisEvent): void
+'     }
+
+'     ' MonitoringService --> RedisServer : trackRedisPerformance()
+'     ' LoggingService --> RedisServer : logRedisEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: RedisEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> RedisServer : trackEvent()
+' }
+
+RedisClient1 --> RedisServer : POST /rediss
+RedisClient2 --> RedisServer : POST /rediss
+RedisClient3 --> RedisServer : POST /rediss
+
+RedisServer --> RedisClient1 : 201 Created or Error
+RedisServer --> RedisClient2 : 201 Created or Error
+RedisServer --> RedisClient3 : 201 Created or Error
+
+RedisClient1 --> RedisServer : POST /rediss/{redis_id}/payloads
+RedisClient2 --> RedisServer : POST /rediss/{redis_id}/payloads
+RedisClient3 --> RedisServer : POST /rediss/{redis_id}/payloads
+
+RedisServer --> RedisClient1 : Deliver Payload
+RedisServer --> RedisClient2 : Deliver Payload
+RedisServer --> RedisClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> RedisServer : Track Redis Performance
+' LoggingService --> RedisServer : Log Redis Event
+' EventTrackingService --> RedisServer : Track Event
+
+@enduml

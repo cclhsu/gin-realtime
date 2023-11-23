@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebSocket GraphQL Client</title>
+</head>
+
+<body>
+    <h1>WebSocket GraphQL Client</h1>
+    <div>
+        <label for="websocketUrl">WebSocket URL:</label>
+        <input type="text" id="websocketUrl" placeholder="Enter WebSocket URL" value="ws://localhost:3001/graphql">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>GraphQL Subscriptions:</h2>
+    <div id="subscriptionContainer"></div>
+    <div>
+        <label for="subscriptionInput">Subscription:</label>
+        <input type="text" id="subscriptionInput" placeholder="Enter a subscription">
+        <button id="subscribeButton">Subscribe</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const websocketUrlInput = document.getElementById("websocketUrl");
+            const connectButton = document.getElementById("connectButton");
+            const subscriptionContainer = document.getElementById("subscriptionContainer");
+            const subscriptionInput = document.getElementById("subscriptionInput");
+            const subscribeButton = document.getElementById("subscribeButton");
+            let socket;
+
+            connectButton.addEventListener("click", function () {
+                const websocketUrl = websocketUrlInput.value;
+                if (!websocketUrl) {
+                    alert("WebSocket URL is required.");
+                    return;
+                }
+
+                socket = new WebSocket(websocketUrl);
+
+                socket.onopen = function () {
+                    connectButton.disabled = true;
+                    subscribeButton.disabled = false;
+                };
+
+                socket.onmessage = function (event) {
+                    const message = JSON.parse(event.data);
+                    const messageElement = document.createElement("p");
+                    messageElement.textContent = message.data;
+                    subscriptionContainer.appendChild(messageElement);
+                };
+
+                socket.onclose = function () {
+                    connectButton.disabled = false;
+                    subscribeButton.disabled = true;
+                };
+
+                socket.onerror = function (error) {
+                    alert("WebSocket error: " + error.message);
+                };
+            });
+
+            subscribeButton.addEventListener("click", function () {
+                const subscription = subscriptionInput.value;
+                if (socket.readyState === WebSocket.OPEN && subscription) {
+                    // Assuming your server expects subscription in a specific format, e.g., JSON
+                    const message = JSON.stringify({ subscription });
+                    socket.send(message);
+                    subscriptionInput.value = "";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

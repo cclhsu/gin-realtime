@@ -1,0 +1,12 @@
+@startuml RedisSequenceDiagram
+
+actor User
+participant Application as "Application"
+participant RedisCache as "Redis Cache"
+
+User -> Application: Request Data
+Application -> RedisCache: Check Redis for Data
+RedisCache --> Application: Data Found in Redis
+Application --> User: Respond with Cached Data
+
+@enduml

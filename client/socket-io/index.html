@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO WebSocket Client</title>
+</head>
+
+<body>
+    <h1>Socket.IO WebSocket Client</h1>
+    <div>
+        <label for="socketUrl">Socket.IO Server URL:</label>
+        <input type="text" id="socketUrl" placeholder="Enter Socket.IO Server URL" value="http://localhost:3000">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>Socket.IO Chat:</h2>
+    <div id="chatContainer"></div>
+    <div>
+        <input type="text" id="chatInput" placeholder="Enter a message">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const socketUrlInput = document.getElementById("socketUrl");
+            const connectButton = document.getElementById("connectButton");
+            const chatContainer = document.getElementById("chatContainer");
+            const chatInput = document.getElementById("chatInput");
+            const sendButton = document.getElementById("sendButton");
+
+            let socket;
+
+            connectButton.addEventListener("click", function () {
+                const socketUrl = socketUrlInput.value;
+                if (!socketUrl) {
+                    alert("Socket.IO Server URL is required.");
+                    return;
+                }
+
+                socket = io(socketUrl);
+
+                socket.on("connect", function () {
+                    connectButton.disabled = true;
+                    sendButton.disabled = false;
+                });
+
+                socket.on("message", function (message) {
+                    const messageElement = document.createElement("p");
+                    messageElement.textContent = message;
+                    chatContainer.appendChild(messageElement);
+                });
+
+                socket.on("disconnect", function () {
+                    connectButton.disabled = false;
+                    sendButton.disabled = true;
+                });
+
+                socket.on("error", function (error) {
+                    alert("Socket.IO error: " + error);
+                });
+            });
+
+            sendButton.addEventListener("click", function () {
+                const message = chatInput.value;
+                if (socket && message) {
+                    socket.emit("message", message);
+                    chatInput.value = "";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

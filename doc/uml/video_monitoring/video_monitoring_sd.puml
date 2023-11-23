@@ -1,0 +1,39 @@
+Title: Video Monitoring App Backend Sequence Diagram
+
+Actor User
+participant App as "Mobile App"
+participant Server as "Gin/NestJS Backend"
+participant Camera as "Video Camera"
+participant Cloud as "Cloud Storage"
+
+User->App: Opens the app
+App->Server: Sends a request for live video stream
+Server->Camera: Initiates video capture
+Camera-->Server: Begins sending live video frames
+Server-->App: Streams live video frames
+App->User: Displays the live video stream
+
+User->App: Requests to start recording
+App->Server: Sends a request to start recording
+Server->Camera: Initiates video recording
+Camera-->Server: Starts recording
+Server-->App: Confirms recording has started
+
+User->App: Requests to stop recording
+App->Server: Sends a request to stop recording
+Server->Camera: Stops video recording
+Camera-->Server: Stops recording
+Server->Cloud: Uploads the recorded video
+Cloud-->Server: Confirms video upload
+Server-->App: Confirms recording has stopped
+
+User->App: Requests playback of recorded video
+App->Server: Sends a request for recorded video
+Server->Cloud: Retrieves the recorded video
+Cloud-->Server: Sends the recorded video
+Server-->App: Streams recorded video frames
+App->User: Displays the recorded video playback
+
+User->App: Logs out
+App->Server: Sends a request to log out
+Server-->App: Logs the user out

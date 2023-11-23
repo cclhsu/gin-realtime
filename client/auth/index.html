@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Authentication Login</title>
+</head>
+
+<body>
+    <h1>Authentication Login</h1>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <button type="submit">Log In</button>
+    </form>
+    <p id="loginStatus"></p>
+
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const loginStatus = document.getElementById("loginStatus");
+
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const username = loginForm.elements.username.value;
+            const password = loginForm.elements.password.value;
+
+            // You should implement the authentication logic here
+            // Send a request to your server to validate the username and password
+            // For this example, we'll simply check for a hardcoded username and password
+
+            if (username === "your_username" && password === "your_password") {
+                loginStatus.textContent = "Login successful! Redirecting...";
+                // You can redirect the user to another page or perform other actions here
+            } else {
+                loginStatus.textContent = "Login failed. Please check your credentials.";
+            }
+        });
+    </script>
+</body>
+
+</html>

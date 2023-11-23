@@ -10,10 +10,10 @@ import (
 
 type ServerSentEventClientInterface interface {
 	NewServerSentEventClientService(ctx context.Context, logger *logrus.Logger) *ServerSentEventClientService
-	Initialize()
+	Initialize() error
 	Connection() error
 	Disconnection() error
-	Trigger(message string) (string, error)
+	Send(message string) (string, error)
 	Echo() (string, error)
 	Broadcast() (string, error)
 	Health() string
@@ -32,10 +32,11 @@ func NewServerSentEventClientService(ctx context.Context, logger *logrus.Logger)
 	}
 }
 
-func (ssecs *ServerSentEventClientService) Initialize() {
+func (ssecs *ServerSentEventClientService) Initialize() error {
 	ssecs.logger.Info("ServerSentEventClientService Initialize")
 	ssecs.serverSentEventServerServiceURL = ssecs.initializeServerSentEventServerServiceURL()
 	ssecs.logger.Infof("ServerSentEvent Server URL: %s\n", ssecs.serverSentEventServerServiceURL)
+	return nil
 }
 
 func (ssecs *ServerSentEventClientService) initializeServerSentEventServerServiceURL() string {
@@ -47,7 +48,7 @@ func (ssecs *ServerSentEventClientService) initializeServerSentEventServerServic
 	if SERVER_PORT == "" {
 		SERVER_PORT = "3001"
 	}
-	return fmt.Sprintf("http://%s:%s/ws", SERVER_HOST, SERVER_PORT)
+	return fmt.Sprintf("http://%s:%s/server-sent-event/handler", SERVER_HOST, SERVER_PORT)
 }
 
 func (ssecs *ServerSentEventClientService) Connection() error {
@@ -60,8 +61,8 @@ func (ssecs *ServerSentEventClientService) Disconnection() error {
 	return nil
 }
 
-func (ssecs *ServerSentEventClientService) Trigger(message string) (string, error) {
-	ssecs.logger.Info("ServerSentEventClientService Trigger")
+func (ssecs *ServerSentEventClientService) Send(message string) (string, error) {
+	ssecs.logger.Info("ServerSentEventClientService Send")
 	return "", nil
 }
 

@@ -1,0 +1,22 @@
+@startuml WebhookSequenceDiagram
+
+actor User
+participant Client as "Webhook Client"
+participant Server as "Webhook Server"
+
+User -> Client: Initiate Registration
+Client -> Server: POST /webhook-client/register
+Server -> Server: Process Registration
+Server --> Client: Respond with Registration Status
+
+User -> Client: Trigger Event
+Client -> Server: POST /webhook-client/trigger-event
+Server -> Server: Process Event Triggering
+Server --> Client: Respond with Event Status
+
+User -> Client: Unregister
+Client -> Server: PUT /webhook-client/disconnect/{webhookId}
+Server -> Server: Process Disconnection
+Server --> Client: Respond with Disconnection Status
+
+@enduml

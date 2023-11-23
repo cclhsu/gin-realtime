@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>gRPC-Web Client</title>
+</head>
+
+<body>
+    <h1>gRPC-Web Client</h1>
+    <div>
+        <label for="grpcUrl">gRPC URL:</label>
+        <input type="text" id="grpcUrl" placeholder="Enter gRPC URL" value="http://localhost:8080">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>gRPC Request and Response:</h2>
+    <div>
+        <label for="requestInput">Request Message:</label>
+        <input type="text" id="requestInput" placeholder="Enter a request message">
+        <button id="sendButton">Send</button>
+    </div>
+    <div id="responseContainer"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/protobufjs/6.8.8/protobuf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/grpc-web/1.5.2/grpc-web.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const grpcUrlInput = document.getElementById("grpcUrl");
+            const connectButton = document.getElementById("connectButton");
+            const requestInput = document.getElementById("requestInput");
+            const sendButton = document.getElementById("sendButton");
+            const responseContainer = document.getElementById("responseContainer");
+
+            let client;
+
+            connectButton.addEventListener("click", function () {
+                const grpcUrl = grpcUrlInput.value;
+                if (!grpcUrl) {
+                    alert("gRPC URL is required.");
+                    return;
+                }
+
+                client = new HelloWorldClient(grpcUrl);
+
+                connectButton.disabled = true;
+                sendButton.disabled = false;
+            });
+
+            sendButton.addEventListener("click", function () {
+                const request = new HelloRequest();
+                request.setName(requestInput.value);
+
+                client.sayHello(request, {}, (error, response) => {
+                    if (!error) {
+                        const messageElement = document.createElement("p");
+                        messageElement.textContent = "Response: " + response.getMessage();
+                        responseContainer.appendChild(messageElement);
+                    } else {
+                        alert("Error: " + error.message);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WebRTC Client</title>
+</head>
+
+<body>
+    <h1>WebRTC Client</h1>
+    <video id="localVideo" autoplay muted playsinline style="width: 320px; height: 240px;"></video>
+    <video id="remoteVideo" autoplay playsinline style="width: 320px; height: 240px;"></video>
+    <button id="startButton">Start</button>
+    <button id="hangupButton" disabled>Hang Up</button>
+
+    <script>
+        const localVideo = document.getElementById("localVideo");
+        const remoteVideo = document.getElementById("remoteVideo");
+        const startButton = document.getElementById("startButton");
+        const hangupButton = document.getElementById("hangupButton");
+        let localStream;
+        let peerConnection;
+
+        startButton.addEventListener("click", start);
+        hangupButton.addEventListener("click", hangup);
+
+        async function start() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                localVideo.srcObject = localStream;
+
+                // Create a peer connection
+                peerConnection = new RTCPeerConnection();
+                peerConnection.onicecandidate = (event) => handleIceCandidate(event);
+                peerConnection.ontrack = (event) => handleTrack(event);
+                localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+
+                hangupButton.disabled = false;
+            } catch (error) {
+                console.error("Error starting WebRTC:", error);
+            }
+        }
+
+        function handleIceCandidate(event) {
+            if (event.candidate) {
+                // Send the ICE candidate to the other peer (signaling server or peer)
+            }
+        }
+
+        function handleTrack(event) {
+            remoteVideo.srcObject = event.streams[0];
+        }
+
+        function hangup() {
+            localStream.getTracks().forEach((track) => track.stop());
+            localVideo.srcObject = null;
+            remoteVideo.srcObject = null;
+            peerConnection.close();
+            hangupButton.disabled = true;
+        }
+    </script>
+</body>
+
+</html>

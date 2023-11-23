@@ -1,0 +1,14 @@
+@startuml gRPCSequenceDiagram
+
+actor User
+participant grpcClient as "grpc Client"
+participant grpcServer as "grpc Server"
+
+User -> grpcClient: Send gRPC Request
+grpcClient -> grpcServer: Invoke gRPC Method
+grpcServer --> grpcClient: Process and Validate Request
+grpcServer --> grpcClient: Execute gRPC Method
+grpcServer --> grpcClient: Send gRPC Response
+grpcClient --> User: Receive gRPC Response
+
+@enduml

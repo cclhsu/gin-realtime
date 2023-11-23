@@ -1,0 +1,17 @@
+@startuml SSESequenceDiagram
+
+actor Client
+participant Server as "SSE Server"
+database Data as "Data Source"
+
+Client -> Server: Initiate SSE Connection
+Server -> Data: Fetch Data
+Data --> Server: Data Update Event
+Server --> Client: Send Data Update
+Client -> Server: Keep Connection Open
+Server -> Data: Fetch More Data
+Data --> Server: Data Update Event
+Server --> Client: Send Data Update
+Client -> Server: Keep Connection Open
+
+@enduml

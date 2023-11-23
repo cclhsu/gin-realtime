@@ -10,13 +10,13 @@ type SocketIOServerInterface interface {
 }
 
 type SocketIOServerService struct {
-	ctx    context.Context
+	ctx	   context.Context
 	logger *logrus.Logger
 }
 
 func NewSocketIOServerService(ctx context.Context, logger *logrus.Logger) *SocketIOServerService {
 	return &SocketIOServerService{
-		ctx:    ctx,
+		ctx:	ctx,
 		logger: logger,
 	}
 }

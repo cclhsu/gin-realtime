@@ -64,6 +64,7 @@ func SetupRestfulWebsocketServerRoutes(ctx context.Context, r *gin.Engine, host 
 	docGroup := r.Group("/doc")
 	{
 		openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfowebsocket_client_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -83,11 +84,19 @@ func SetupRestfulWebsocketServerRoutes(ctx context.Context, r *gin.Engine, host 
 		healthGroup.GET("/ready", healthController.IsReady)
 	}
 
+	// handle weboscket request from client
+	// websocketServerGroup := r.Group("/api/v1/websocket")
 	websocketGroup := r.Group("/websocket")
 	{
+		// websocketGroup.Use(middleware.WebsocketMiddleware())
+
 		// Get websocket handler
 		websocketGroup.GET("/ws", websocketController.WebsocketHandler)
-		// websocketGroup.GET("/ws", websocketServerService.WebsocketHandler)
-		// websocketGroup.GET("/health", websocketServerService.HealthHandler)
+		// websocketGroup.GET("/echo", websocketServerService.WebsocketEchoHandler)
+		// websocketGroup.GET("/broadcast", websocketServerService.WebsocketBroadcastHandler)
+		// websocketGroup.GET("/unicast", websocketServerService.WebsocketUnicastHandler)
+		// websocketGroup.GET("/event", websocketServerService.WebsocketEventHandler)
+		// websocketGroup.GET("/task", websocketServerService.WebsocketTaskHandler)
+		// websocketGroup.GET("/health", websocketServerService.Websocket HealthHandler)
 	}
 }

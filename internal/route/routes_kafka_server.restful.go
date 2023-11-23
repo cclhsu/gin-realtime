@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulKafkaServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulKafkaServerRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, kafkaServerService *service.KafkaServerService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	kafkaServerController := controller.NewKafkaServerController(ctx, logger, kafkaServerService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -80,5 +81,16 @@ func SetupRestfulKafkaServerRoutes(ctx context.Context, r *gin.Engine, host stri
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	kafkaGroup := r.Group("/kafka")
+	{
+		// Get kafka handler
+		kafkaGroup.GET("/handler", kafkaServerController.KafkaHandler)
+		// kafkaGroup.GET("/echo", kafkaServerController.KafkaEchoHandler)
+		// kafkaGroup.GET("/broadcast", kafkaServerController.KafkaBroadcastHandler)
+		// kafkaGroup.GET("/event", kafkaServerController.KafkaEventHandler)
+		// kafkaGroup.GET("/message", kafkaServerController.KafkaMessageHandler)
+		// kafkaGroup.GET("/health", kafkaServerController.Kafka HealthHandler)
 	}
 }

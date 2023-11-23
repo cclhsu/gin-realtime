@@ -18,11 +18,12 @@ import (
 )
 
 // SetupRoutes sets up the API routes
-func SetupRestfulServerSentEventClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService) {
+func SetupRestfulServerSentEventClientRoutes(ctx context.Context, r *gin.Engine, host string, port string, logger *logrus.Logger, helloService *service.HelloService, healthService *service.HealthService, serverSentEventClientService *service.ServerSentEventClientService) {
 
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
+	serverSentEventClientController := controller.NewServerSentEventClientController(ctx, logger, serverSentEventClientService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -80,5 +81,14 @@ func SetupRestfulServerSentEventClientRoutes(ctx context.Context, r *gin.Engine,
 
 		// Get health check
 		healthGroup.GET("/ready", healthController.IsReady)
+	}
+
+	serverSentEventCGroup := r.Group("/server-sent-event-client")
+	{
+		// Get health check
+		serverSentEventCGroup.GET("/health", serverSentEventClientController.Health)
+
+		// Send message to server
+		serverSentEventCGroup.GET("/send", serverSentEventClientController.Send)
 	}
 }

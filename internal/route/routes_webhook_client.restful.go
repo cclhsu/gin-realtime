@@ -64,6 +64,7 @@ func SetupRestfulWebhookClientRoutes(ctx context.Context, r *gin.Engine, host st
 	docGroup := r.Group("/doc")
 	{
 		openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfowebsocket_client_service.BasePath = "/"
 
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -90,15 +91,27 @@ func SetupRestfulWebhookClientRoutes(ctx context.Context, r *gin.Engine, host st
 		// webhookGroup.Use(middleware.WebhookMiddleware())
 
 		// Register a webhook
-		webhookClientGroup.POST("/register", webhookClientController.RegisterWebhook)
+		webhookClientGroup.POST("/register", webhookClientController.Register)
 
-		// trigger event
-		webhookClientGroup.POST("/trigger-event", webhookClientController.TriggerEvent)
+		// Unregister a webhook
+		webhookClientGroup.DELETE("/register/:webhookId", webhookClientController.Unregister)
 
-		// Handle webhook payload
-		webhookClientGroup.POST("/handle-payload", webhookClientController.HandleTriggeredEvent)
+		// List all webhooks
+		webhookClientGroup.GET("/register", webhookClientController.ListRegistrations)
 
-		// Disconnect a webhook
-		webhookClientGroup.PUT("/disconnect/:webhookId", webhookClientController.DisconnectWebhook)
+		// Update a webhook
+		webhookClientGroup.PUT("/register/:webhookId", webhookClientController.UpdateRegistration)
+
+		// Send a Message to a webhook
+		webhookClientGroup.POST("/message/send", webhookClientController.Send)
+
+		// Receive a Message from a webhook
+		webhookClientGroup.POST("/message/receive", webhookClientController.Receive)
+
+		// List all Messages
+		webhookClientGroup.GET("/message", webhookClientController.ListMessages)
+
+		// Health check
+		// webhookClientGroup.GET("/health", webhookClientController.Health)
 	}
 }

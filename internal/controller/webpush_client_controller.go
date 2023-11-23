@@ -12,7 +12,7 @@ import (
 type WebpushClientControllerInterface interface {
 	Connect(c *gin.Context)
 	Disconnect(c *gin.Context)
-	Trigger(c *gin.Context)
+	Send(c *gin.Context)
 	// Echo(c *gin.Context)
 	// Broadcast(c *gin.Context)
 	Health(c *gin.Context)
@@ -32,30 +32,30 @@ func NewWebpushClientController(ctx context.Context, logger *logrus.Logger, webp
 	}
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/webpush/health' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3001/webpush-client/health' | jq
 // @Summary webpush client health
 // @Description webpush client health
-// @Tags webpush
+// @Tags webpush-client
 // @Accept json
 // @Produce json
 // @Success 200 {object} string "OK"
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /webpush/health [get]
+// @Router /webpush-client/health [get]
 func (wcc *WebpushClientController) Health(ginContext *gin.Context) {
 	wcc.logger.Info("WebpushClientController HealthHandler")
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": wcc.webpushClientService.Health(),
 	})
 }
 
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/webpush/trigger?message=hello' | jq
-// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/webpush/trigger' -d '{"message":"hello"}' | jq
-// @Summary webpush client trigger message
-// @Description webpush client trigger message
-// @Tags webpush
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/webpush-client/send?message=hello' | jq
+// curl -s -X 'GET' -H 'accept: application/json' 'http://0.0.0.0:3002/webpush-client/send' -d '{"message":"hello"}' | jq
+// @Summary webpush client send message
+// @Description webpush client send message
+// @Tags webpush-client
 // @Accept json
 // @Produce json
 // @Param message query string true "message"
@@ -63,12 +63,12 @@ func (wcc *WebpushClientController) Health(ginContext *gin.Context) {
 // @Failure 400 {object} string "Invalid request"
 // @Failure 401 {object} string "Unauthorized"
 // @Failure 500 {object} string "Internal Server Error"
-// @Router /webpush/trigger [get]
-func (wcc *WebpushClientController) Trigger(ginContext *gin.Context) {
-	wcc.logger.Info("WebpushClientController TriggerHandler")
+// @Router /webpush-client/send [get]
+func (wcc *WebpushClientController) Send(ginContext *gin.Context) {
+	wcc.logger.Info("WebpushClientController SendHandler")
 
 	message := ginContext.Query("message")
-	message, err := wcc.webpushClientService.Trigger(message)
+	message, err := wcc.webpushClientService.Send(message)
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -76,17 +76,17 @@ func (wcc *WebpushClientController) Trigger(ginContext *gin.Context) {
 
 	// var data model.WebpushMessageDTO
 	// if err := ginContext.ShouldBindJSON(&webhookData); err != nil {
-	// 	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	// message, err  := wcc.webpushClientService.Trigger(data)
+	// message, err	 := wcc.webpushClientService.Send(data)
 	// if err != nil {
-	// 	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	// 	return
+	//	ginContext.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	//	return
 	// }
 
-	ginContext.JSON(200, gin.H{
+	ginContext.JSON(http.StatusOK, gin.H{
 		"message": message,
 	})
 }

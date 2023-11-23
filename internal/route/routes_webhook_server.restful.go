@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	openapiDocs "github.com/cclhsu/gin-realtime/doc/openapi"
 	"github.com/cclhsu/gin-realtime/internal/controller"
 	"github.com/sirupsen/logrus"
 
@@ -62,12 +63,11 @@ func SetupRestfulWebhookServerRoutes(ctx context.Context, r *gin.Engine, host st
 	// docGroup := r.Group("/api/v1/doc")
 	docGroup := r.Group("/doc")
 	{
-		// openapiDocs.SwaggerInfo.BasePath = "/"
-		// openapiDocs.SwaggerInfowebhook_server_service.BasePath = "/webhook-server-service"
-		// openapiDocs.cs.
+		openapiDocs.SwaggerInfo.BasePath = "/"
+		// openapiDocs.SwaggerInfowebsocket_client_service.BasePath = "/"
+
 		// Serve Swagger documentation
 		// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-		// docGroup.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		docGroup.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
 
@@ -91,18 +91,27 @@ func SetupRestfulWebhookServerRoutes(ctx context.Context, r *gin.Engine, host st
 		// webhookGroup.Use(middleware.WebhookMiddleware())
 
 		// Register a webhook
-		webhookServerGroup.POST("/register", webhookServerController.RegisterWebhook)
+		webhookServerGroup.POST("/register", webhookServerController.Register)
 
-		// trigger event
-		webhookServerGroup.POST("/handle-event", webhookServerController.HandleWebhookEvent)
+		// Unregister a webhook
+		webhookServerGroup.DELETE("/register/:webhookId", webhookServerController.Unregister)
 
-		// Handle webhook event
-		webhookServerGroup.DELETE("/unregister/:webhookId", webhookServerController.UnregisterWebhook)
-
-		// List registered webhooks
-		webhookServerGroup.GET("/list", webhookServerController.ListRegisteredWebhooks)
+		// List all webhooks
+		webhookServerGroup.GET("/register", webhookServerController.ListRegistrations)
 
 		// Update a webhook
-		webhookServerGroup.PUT("/update/:webhookId", webhookServerController.UpdateWebhook)
+		webhookServerGroup.PUT("/register/:webhookId", webhookServerController.UpdateRegistration)
+
+		// Send a Message to a webhook
+		webhookServerGroup.POST("/message/send", webhookServerController.Send)
+
+		// Receive a Message from a webhook
+		webhookServerGroup.POST("/message/receive", webhookServerController.Receive)
+
+		// List all Messages
+		webhookServerGroup.GET("/message", webhookServerController.ListMessages)
+
+		// Get health check
+		// webhookServerGroup.GET("/health", webhookServerController.Health)
 	}
 }

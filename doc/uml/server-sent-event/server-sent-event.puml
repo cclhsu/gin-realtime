@@ -1,0 +1,227 @@
+' @startuml
+
+' !define class class
+' !define ARROW --> : HTTP Request
+' !define DIAMOND1 diamond
+' !define DIAMOND2 diamond
+
+' class User
+' class Service
+' class ServerSentEventServer
+' class ServerSentEventClient
+
+' User --> Service : Register ServerSentEvent
+' Service --> ServerSentEventServer : POST /serversentevents
+' ServerSentEventServer --> Service : 201 Created or Error
+' Service --> ServerSentEventServer : POST /serversentevents/{serversentevent_id}/payloads
+' ServerSentEventServer --> Service : Deliver Payload
+' User --> Service : Disconnect ServerSentEvent
+' Service --> ServerSentEventServer : DELETE /serversentevents/{serversentevent_id}
+' ServerSentEventServer --> Service : 204 No Content or Error
+
+' @enduml
+
+
+@startuml
+
+package "ServerSentEvent Server" as ServerSentEventServer {
+    class ServerSentEventServerController {
+        + GET /health: string
+    }
+
+    ' class ServerSentEventServerService {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class ServerSentEventServerRepository {
+    '     + checkHealth(): Promise<string>
+    ' }
+
+    ' class MessageDTO {
+    '     + uuid: string
+    '     + type: string
+    '     + payload: string
+    ' }
+
+    ' ServerSentEventServerController --> ServerSentEventServerService : Register ServerSentEvent
+    ' ServerSentEventServerService --> ServerSentEventServerRepository : Register ServerSentEvent
+    ' ServerSentEventServerRepository --> ServerSentEventServerService : 201 Created or Error
+    ' ServerSentEventServerService --> ServerSentEventServerController : 201 Created or Error
+
+    ' ServerSentEventServerController --> ServerSentEventServerService : Deliver Payload
+    ' ServerSentEventServerService --> ServerSentEventServerRepository : Deliver Payload
+    ' ServerSentEventServerRepository --> ServerSentEventServerService : 200 OK or Error
+    ' ServerSentEventServerService --> ServerSentEventServerController : 200 OK or Error
+
+    ' ServerSentEventServerController --> ServerSentEventServerService : Disconnect ServerSentEvent
+    ' ServerSentEventServerService --> ServerSentEventServerRepository : Disconnect ServerSentEvent
+    ' ServerSentEventServerRepository --> ServerSentEventServerService : 204 No Content or Error
+    ' ServerSentEventServerService --> ServerSentEventServerController : 204 No Content or Error
+}
+
+package "ServerSentEvent Clients" as ServerSentEventClients {
+    package "ServerSentEvent Client 1" as ServerSentEventClient1 {
+        class ServerSentEventClient1Controller {
+            + GET /health: string
+        }
+
+        ' class ServerSentEventClient1Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class ServerSentEventClient1Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Register ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Register ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 201 Created or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 201 Created or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Send Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Send Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Receive Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Receive Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 204 No Content or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 204 No Content or Error
+    }
+
+    package "ServerSentEvent Client 2" as ServerSentEventClient2 {
+        class ServerSentEventClient2Controller {
+            + GET /health: string
+        }
+
+        ' class ServerSentEventClient2Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class ServerSentEventClient2Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Register ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Register ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 201 Created or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 201 Created or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Send Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Send Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Receive Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Receive Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 204 No Content or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 204 No Content or Error
+    }
+
+    package "ServerSentEvent Client 3" as ServerSentEventClient3 {
+        class ServerSentEventClient3Controller {
+            + GET /health: string
+        }
+
+        ' class ServerSentEventClient3Service {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' class ServerSentEventClient3Repository {
+        '     + checkHealth(): Promise<string>
+        ' }
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Register ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Register ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 201 Created or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 201 Created or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Send Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Send Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Receive Payload
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Receive Payload
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 200 OK or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 200 OK or Error
+
+        ' ServerSentEventClient1Controller --> ServerSentEventClient1Service : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Repository : Disconnect ServerSentEvent
+        ' ServerSentEventClient1Repository --> ServerSentEventClient1Service : 204 No Content or Error
+        ' ServerSentEventClient1Service --> ServerSentEventClient1Controller : 204 No Content or Error
+    }
+}
+
+' package "Security" {
+'     class Authentication {
+'         + authenticateRequest(request: HttpRequest): boolean
+'     }
+'     class Authorization {
+'         + authorizeRequest(request: HttpRequest): boolean
+'     }
+'     class SecretKeyValidation {
+'         + validateSecretKey(payload: ServerSentEventPayload, secretKey: string): boolean
+'     }
+
+'     ' Authorization --> Authentication : authenticateRequest()
+'     ' SecretKeyValidation --> Authorization : authorizeRequest()
+'     ' SecretKeyValidation --> ServerSentEventServer : validateSecretKey()
+' }
+
+' package "Monitoring & Logging" {
+'     class MonitoringService {
+'         + trackServerSentEventPerformance(serversenteventId: ID): PerformanceMetrics
+'     }
+'     class LoggingService {
+'         + logServerSentEventEvent(eventData: ServerSentEventEvent): void
+'     }
+
+'     ' MonitoringService --> ServerSentEventServer : trackServerSentEventPerformance()
+'     ' LoggingService --> ServerSentEventServer : logServerSentEventEvent()
+' }
+
+' package "Event Tracking" {
+'     class EventTrackingService {
+'         + trackEvent(eventData: ServerSentEventEvent): EventStatus
+'     }
+
+'     ' EventTrackingService --> ServerSentEventServer : trackEvent()
+' }
+
+ServerSentEventClient1 --> ServerSentEventServer : POST /serversentevents
+ServerSentEventClient2 --> ServerSentEventServer : POST /serversentevents
+ServerSentEventClient3 --> ServerSentEventServer : POST /serversentevents
+
+ServerSentEventServer --> ServerSentEventClient1 : 201 Created or Error
+ServerSentEventServer --> ServerSentEventClient2 : 201 Created or Error
+ServerSentEventServer --> ServerSentEventClient3 : 201 Created or Error
+
+ServerSentEventClient1 --> ServerSentEventServer : POST /serversentevents/{serversentevent_id}/payloads
+ServerSentEventClient2 --> ServerSentEventServer : POST /serversentevents/{serversentevent_id}/payloads
+ServerSentEventClient3 --> ServerSentEventServer : POST /serversentevents/{serversentevent_id}/payloads
+
+ServerSentEventServer --> ServerSentEventClient1 : Deliver Payload
+ServerSentEventServer --> ServerSentEventClient2 : Deliver Payload
+ServerSentEventServer --> ServerSentEventClient3 : Deliver Payload
+
+
+
+' Security.Authentication --> Security.Authorization : Authorize Request
+' Security.Authorization --> Security.SecretKeyValidation : Validate Secret Key
+
+' MonitoringService --> ServerSentEventServer : Track ServerSentEvent Performance
+' LoggingService --> ServerSentEventServer : Log ServerSentEvent Event
+' EventTrackingService --> ServerSentEventServer : Track Event
+
+@enduml

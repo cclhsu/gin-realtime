@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Redis WebSocket Client</title>
+</head>
+
+<body>
+    <h1>Redis WebSocket Client</h1>
+    <div>
+        <label for="redisUrl">Redis WebSocket URL:</label>
+        <input type="text" id="redisUrl" placeholder="Enter Redis WebSocket URL" value="ws://localhost:6379">
+    </div>
+    <button id="connectButton">Connect</button>
+
+    <h2>Redis Publisher:</h2>
+    <div>
+        <label for="publisherChannel">Channel:</label>
+        <input type="text" id="publisherChannel" placeholder="Enter a channel">
+        <label for="publisherMessage">Message:</label>
+        <input type="text" id="publisherMessage" placeholder="Enter a message">
+        <button id="publishButton">Publish</button>
+    </div>
+
+    <h2>Redis Subscriber:</h2>
+    <div id="subscriberContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ioredis@4.32.2/dist/ioredis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/websocket@1.0.31/lib/websocket.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const redisUrlInput = document.getElementById("redisUrl");
+            const connectButton = document.getElementById("connectButton");
+            const publisherChannelInput = document.getElementById("publisherChannel");
+            const publisherMessageInput = document.getElementById("publisherMessage");
+            const publishButton = document.getElementById("publishButton");
+            const subscriberContainer = document.getElementById("subscriberContainer");
+
+            let redisClient;
+
+            connectButton.addEventListener("click", function () {
+                const redisUrl = redisUrlInput.value;
+                if (!redisUrl) {
+                    alert("Redis WebSocket URL is required.");
+                    return;
+                }
+
+                redisClient = new WebSocket(redisUrl);
+                redisClient.onopen = function () {
+                    connectButton.disabled = true;
+                    publishButton.disabled = false;
+                };
+
+                redisClient.onmessage = function (event) {
+                    const message = event.data;
+                    const messageElement = document.createElement("p");
+                    messageElement.textContent = message;
+                    subscriberContainer.appendChild(messageElement);
+                };
+            });
+
+            publishButton.addEventListener("click", function () {
+                const channel = publisherChannelInput.value;
+                const message = publisherMessageInput.value;
+                if (redisClient && channel && message) {
+                    redisClient.send(JSON.stringify({
+                        type: "publish",
+                        channel: channel,
+                        message: message,
+                    }));
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
