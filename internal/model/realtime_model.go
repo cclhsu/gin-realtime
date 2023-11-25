@@ -365,3 +365,23 @@ func ConvertToTaskDTO(item interface{}) (TaskDTO, error) {
 	}
 	return task, nil
 }
+
+type TopicDTO struct {
+	Topic   string `json:"topic"`
+	Message string `json:"message"`
+}
+
+func ConvertToTopicDTO(item interface{}) (TopicDTO, error) {
+	// Check the type of the item
+	v, ok := item.(map[string]interface{})
+	if !ok {
+		return TopicDTO{}, fmt.Errorf("Unexpected type in item: %v", reflect.TypeOf(item))
+	}
+
+	// Extract data
+	topic := TopicDTO{
+		Topic:   utils.ExtractString(v, "topic"),
+		Message: utils.ExtractString(v, "message"),
+	}
+	return topic, nil
+}

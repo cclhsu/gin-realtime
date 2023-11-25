@@ -21,17 +21,21 @@ import (
 )
 
 var (
-	ctx	   context.Context
+	ctx    context.Context
 	logger *logrus.Logger
 
-	host	 string
-	port	 string
+	host     string
+	port     string
 	endpoint string
-	router	 *gin.Engine
+	router   *gin.Engine
 
-	helloService	   *service.HelloService
-	healthService	   *service.HealthService
+	helloService       *service.HelloService
+	healthService      *service.HealthService
 	kafkaClientService *service.KafkaClientService
+
+	bootstrapServers string
+	groupID          string
+	topics           []string
 )
 
 // CallerPrettyfier is a function that formats the caller information.
@@ -76,8 +80,8 @@ func setupLogger() {
 	//	// You can customize other formatting options here
 	// })
 	logger.SetFormatter(&logrus.TextFormatter{
-		DisableColors:	  false, // Disable colored output
-		FullTimestamp:	  true,	 // Include the timestamp
+		DisableColors:    false, // Disable colored output
+		FullTimestamp:    true,  // Include the timestamp
 		TimestampFormat:  time.RFC3339,
 		CallerPrettyfier: CallerPrettyfier,
 	})
@@ -126,6 +130,27 @@ func startGinServer() {
 	}
 }
 
+func getKafkaTopics() []string {
+	topicsEnv := os.Getenv("KAFKA_TOPICS")
+	if topicsEnv == "" {
+		// Default topic if KAFKA_TOPICS is not set
+		return []string{"my-topic"}
+	}
+
+	topics := strings.Split(topicsEnv, ",")
+	if len(topics) == 0 {
+		// Empty topics slice, use the default topic
+		return []string{"my-topic"}
+	}
+
+	// Remove any leading or trailing whitespaces from topic names
+	for i := range topics {
+		topics[i] = strings.TrimSpace(topics[i])
+	}
+
+	return topics
+}
+
 // @title My API
 // @description This is a sample API server using Gin and Swagger.
 // @version 1.0
@@ -151,7 +176,23 @@ func main() {
 	healthService = service.NewHealthService(ctx, logger)
 
 	// Create the kafka client service
-	kafkaClientService = service.NewKafkaClientService(ctx, logger)
+	// bootstrapServers, groupID string, topics []string) (*KafkaClientService, error
+
+	bootstrapServers := os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
+	if bootstrapServers == "" {
+		bootstrapServers = "kafka:9092" // "localhost:9092"
+	}
+	groupID := os.Getenv("KAFKA_GROUP_ID")
+	if groupID == "" {
+		groupID = "my-group"
+	}
+	topics := getKafkaTopics()
+
+	kafkaClientService, err = service.NewKafkaClientService(ctx, logger, bootstrapServers, groupID, topics)
+	if err != nil {
+		logger.Fatalf("Failed to create Kafka client service: %v", err)
+	}
+	kafkaClientService.Initialize()
 
 	// Start Gin server in a goroutine
 	go startGinServer()

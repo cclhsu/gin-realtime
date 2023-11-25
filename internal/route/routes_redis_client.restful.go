@@ -23,7 +23,7 @@ func SetupRestfulRedisClientRoutes(ctx context.Context, r *gin.Engine, host stri
 	// Create instances of the controller
 	helloController := controller.NewHelloController(ctx, logger, helloService)
 	healthController := controller.NewHealthController(ctx, logger, healthService)
-	redisClientController := controller.NewRedisClientController(ctx, logger, redisClientService)
+	// redisClientController := controller.NewRedisClientController(ctx, logger, redisClientService)
 
 	// Enable CORS middleware
 	r.Use(func(c *gin.Context) {
@@ -83,12 +83,12 @@ func SetupRestfulRedisClientRoutes(ctx context.Context, r *gin.Engine, host stri
 		healthGroup.GET("/ready", healthController.IsReady)
 	}
 
-	redisGroup := r.Group("/redis-client")
-	{
-		// Get health check
-		redisGroup.GET("/health", redisClientController.Health)
+	// redisGroup := r.Group("/redis-client")
+	// {
+	// 	// Get health check
+	// 	redisGroup.GET("/health", redisClientController.Health)
 
-		// Send message to server
-		redisGroup.GET("/send", redisClientController.Send)
-	}
+	// 	// Send message to server
+	// 	redisGroup.GET("/send", redisClientController.Send)
+	// }
 }

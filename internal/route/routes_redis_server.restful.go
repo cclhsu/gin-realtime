@@ -85,12 +85,13 @@ func SetupRestfulRedisServerRoutes(ctx context.Context, r *gin.Engine, host stri
 
 	redisGroup := r.Group("/redis")
 	{
-		// Get redis handler
-		redisGroup.GET("/handler", redisServerController.RedisHandler)
-		// redisGroup.GET("/echo", redisServerController.RedisEchoHandler)
-		// redisGroup.GET("/broadcast", redisServerController.RedisBroadcastHandler)
-		// redisGroup.GET("/event", redisServerController.RedisEventHandler)
-		// redisGroup.GET("/message", redisServerController.RedisMessageHandler)
-		// redisGroup.GET("/health", redisServerController.Redis HealthHandler)
+		// // Create topic
+		// redisGroup.POST("/topic", redisServerController.CreateTopic)
+
+		// // Delete topic
+		// redisGroup.DELETE("/topic", redisServerController.DeleteTopic)
+
+		// POST redis handler
+		redisGroup.POST("/produce", redisServerController.Produce)
 	}
 }

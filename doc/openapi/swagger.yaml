@@ -670,44 +670,18 @@ paths:
       summary: get hello world string
       tags:
       - hello
-  /kafka-client/health:
-    get:
+  /kafka/create-topic:
+    post:
       consumes:
       - application/json
-      description: kafka client health
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: kafka client health
-      tags:
-      - kafka-client
-  /kafka-client/send:
-    get:
-      consumes:
-      - application/json
-      description: kafka client send message
+      description: kafka server create topic
       parameters:
-      - description: message
-        in: query
-        name: message
+      - description: topic
+        in: body
+        name: topic
         required: true
-        type: string
+        schema:
+          type: string
       produces:
       - application/json
       responses:
@@ -727,41 +701,21 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: kafka client send message
-      tags:
-      - kafka-client
-  /kafka/handler:
-    get:
-      consumes:
-      - application/json
-      description: kafka handler
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Invalid request
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: kafka handler
+      summary: kafka server create topic
       tags:
       - kafka
-  /redis-client/health:
-    get:
+  /kafka/delete-topic:
+    post:
       consumes:
       - application/json
-      description: redis client health
+      description: kafka server delete topic
+      parameters:
+      - description: topic
+        in: body
+        name: topic
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:
@@ -781,20 +735,27 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: redis client health
+      summary: kafka server delete topic
       tags:
-      - redis-client
-  /redis-client/send:
-    get:
+      - kafka
+  /kafka/produce:
+    post:
       consumes:
       - application/json
-      description: redis client send message
+      description: kafka server produce message
       parameters:
+      - description: topic
+        in: body
+        name: topic
+        required: true
+        schema:
+          type: string
       - description: message
-        in: query
+        in: body
         name: message
         required: true
-        type: string
+        schema:
+          type: string
       produces:
       - application/json
       responses:
@@ -814,14 +775,21 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: redis client send message
+      summary: kafka server produce message
       tags:
-      - redis-client
-  /redis/handler:
-    get:
+      - kafka
+  /redis/create-topic:
+    post:
       consumes:
       - application/json
-      description: redis handler
+      description: redis server create topic
+      parameters:
+      - description: topic
+        in: body
+        name: topic
+        required: true
+        schema:
+          type: string
       produces:
       - application/json
       responses:
@@ -841,7 +809,81 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: redis handler
+      summary: redis server create topic
+      tags:
+      - redis
+  /redis/delete-topic:
+    post:
+      consumes:
+      - application/json
+      description: redis server delete topic
+      parameters:
+      - description: topic
+        in: body
+        name: topic
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: redis server delete topic
+      tags:
+      - redis
+  /redis/produce:
+    post:
+      consumes:
+      - application/json
+      description: redis server produce message
+      parameters:
+      - description: topic
+        in: body
+        name: topic
+        required: true
+        schema:
+          type: string
+      - description: message
+        in: body
+        name: message
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: redis server produce message
       tags:
       - redis
   /server-sent-event-client/health:

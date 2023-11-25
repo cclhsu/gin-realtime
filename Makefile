@@ -80,6 +80,7 @@ install:  ## Install packages for the project
 	export GO111MODULE=on
 	go mod init ${GIT_PROVIDER}/${GITHUB_USER}/${GITHUB_PROJECT}
 	go get github.com/asaskevich/govalidator
+	go get github.com/confluentinc/confluent-kafka-go/kafka
 	go get github.com/gin-gonic/gin
 	go get github.com/go-redis/redis/v8
 	go get github.com/golang-jwt/jwt

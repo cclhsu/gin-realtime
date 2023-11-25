@@ -85,12 +85,13 @@ func SetupRestfulKafkaServerRoutes(ctx context.Context, r *gin.Engine, host stri
 
 	kafkaGroup := r.Group("/kafka")
 	{
-		// Get kafka handler
-		kafkaGroup.GET("/handler", kafkaServerController.KafkaHandler)
-		// kafkaGroup.GET("/echo", kafkaServerController.KafkaEchoHandler)
-		// kafkaGroup.GET("/broadcast", kafkaServerController.KafkaBroadcastHandler)
-		// kafkaGroup.GET("/event", kafkaServerController.KafkaEventHandler)
-		// kafkaGroup.GET("/message", kafkaServerController.KafkaMessageHandler)
-		// kafkaGroup.GET("/health", kafkaServerController.Kafka HealthHandler)
+		// // Create topic
+		// kafkaGroup.POST("/topic", kafkaServerController.CreateTopic)
+
+		// // Delete topic
+		// kafkaGroup.DELETE("/topic", kafkaServerController.DeleteTopic)
+
+		// POST kafka handler
+		kafkaGroup.POST("/produce", kafkaServerController.Produce)
 	}
 }
